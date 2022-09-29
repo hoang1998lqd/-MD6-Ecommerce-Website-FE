@@ -25,7 +25,30 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+            "src/assets/js/vendor/popper.min.js",
+              "src/assets/js/vendor/modernizr-2.8.3.min.js",
+              "src/assets/js/vendor/jquery-1.12.4.min.js",
+              "src/assets/js//bootstrap.min.js",
+              "src/assets/js//ajax-mail.js",
+              "src/assets/js//jquery.meanmenu.min.js",
+              "src/assets/js//wow.min.js",
+              "src/assets/js//slick.min.js",
+              "src/assets/js//owl.carousel.min.js",
+              "src/assets/js//jquery.magnific-popup.min.js",
+              "src/assets/js//isotope.pkgd.min.js",
+              "src/assets/js//imagesloaded.pkgd.min.js",
+              "src/assets/js//jquery.mixitup.min.js",
+              "src/assets/js//jquery.countdown.min.js",
+              "src/assets/js//jquery.counterup.min.js",
+              "src/assets/js//waypoints.min.js",
+              "src/assets/js//jquery.barrating.min.js",
+              "src/assets/js//jquery-ui.min.js",
+              "src/assets/js//venobox.min.js",
+              "src/assets/js//jquery.nice-select.min.js",
+              "src/assets/js//scrollUp.min.js",
+              "src/assets/js//main.js"
+            ]
           },
           "configurations": {
             "production": {

@@ -15,7 +15,7 @@ export class ShoppingCartComponent implements OnInit {
     document.body.appendChild(script1);
   }
 
-  ngAfterViewInit(){
+  ngAfterContentInit(){
     const script2 = document.createElement('script');
     script2.src = './assets/js/vendor/jquery-1.12.4.min.js';
     document.body.appendChild(script2);
@@ -77,7 +77,7 @@ export class ShoppingCartComponent implements OnInit {
     script21.src = './assets/js/scrollUp.min.js';
     document.body.appendChild(script21);
     const script22 = document.createElement('script');
-    script22.src = './assets/js/main.js';
+    script22.src = '/assets/js/main.js';
     document.body.appendChild(script22);
   }
 

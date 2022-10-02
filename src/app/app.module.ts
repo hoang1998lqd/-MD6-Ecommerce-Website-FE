@@ -9,6 +9,9 @@ import { ShopComponent } from './shop/shop.component';
 import {HomeComponent} from "./home/home.component";
 import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
 import { LoginRegisterComponent } from './login-register/login-register.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { AdminComponent } from './admin/admin.component';
+import { AdminTableComponent } from './admin-table/admin-table.component';
 
 
 @NgModule({
@@ -18,7 +21,10 @@ import { LoginRegisterComponent } from './login-register/login-register.componen
     ShopComponent,
     RoutingComponent,
     ShoppingCartComponent,
-    LoginRegisterComponent
+    LoginRegisterComponent,
+    PageNotFoundComponent,
+    AdminComponent,
+    AdminTableComponent
   ],
   imports: [
     BrowserModule,

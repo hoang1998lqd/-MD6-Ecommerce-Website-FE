@@ -3,10 +3,20 @@ import { RouterModule, Routes } from '@angular/router';
 import {ShopComponent} from "./shop/shop.component";
 import {HomeComponent} from "./home/home.component";
 import {ShoppingCartComponent} from "./shopping-cart/shopping-cart.component";
+import {LoginRegisterComponent} from "./login-register/login-register.component";
+import {PageNotFoundComponent} from "./page-not-found/page-not-found.component";
+import {AdminComponent} from "./admin/admin.component";
+import {AdminTableComponent} from "./admin-table/admin-table.component";
 
 const routes: Routes = [
   {
-    path:"", component: HomeComponent,
+    path: "admin-table", component: AdminTableComponent,
+  },
+  {
+    path: "admin", component: AdminComponent,
+  },
+  {
+    path:"", component: HomeComponent
   },
   {
     path:"shop", component: ShopComponent,
@@ -16,6 +26,12 @@ const routes: Routes = [
       },
       {
         path: "", component: HomeComponent
+      },
+      {
+        path: "login-register", component: LoginRegisterComponent
+      },
+      {
+        path: "**", component: PageNotFoundComponent
       }
     ]
   },
@@ -27,10 +43,40 @@ const routes: Routes = [
       },
       {
         path: "", component: HomeComponent
+      },
+      {
+        path: "login-register", component: LoginRegisterComponent
+      },
+      {
+        path: "**", component: PageNotFoundComponent
+      }
+    ]
+  },
+  {
+    path: "login-register", component: LoginRegisterComponent,
+    children:[
+      {
+        path: "", component: HomeComponent
+      },
+      {
+        path: "shop", component: ShopComponent
+      },
+      {
+        path: "shopping-cart", component: ShoppingCartComponent
+      },
+      {
+        path: "**", component: PageNotFoundComponent
+      }
+    ]
+  },
+  {
+    path: "**", component: PageNotFoundComponent,
+    children:[
+      {
+        path: "", component: HomeComponent
       }
     ]
   }
-
 ];
 
 @NgModule({
@@ -38,4 +84,4 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
-export const RoutingComponent = [HomeComponent, ShopComponent, ShoppingCartComponent]
+export const RoutingComponent = [HomeComponent, ShopComponent, ShoppingCartComponent, LoginRegisterComponent, PageNotFoundComponent, AdminComponent, AdminTableComponent]

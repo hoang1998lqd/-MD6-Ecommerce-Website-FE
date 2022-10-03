@@ -8,6 +8,7 @@ import {Category} from "../model/Category";
 import {Customer} from "../model/Customer";
 import Swal from 'sweetalert2'
 import {FormCreateProductComponent} from "../form-create-product/form-create-product.component";
+import {ProductDTO} from "../model/productDTO";
 
 
 @Component({
@@ -16,7 +17,7 @@ import {FormCreateProductComponent} from "../form-create-product/form-create-pro
   styleUrls: ['./admin-table.component.css']
 })
 export class AdminTableComponent implements OnInit, AfterContentChecked {
-  products: Product [] = []
+  products: ProductDTO[] = []
   brands: Product [] = []
   categories: Product [] = []
   listBrandByCategory: Brand [] = []

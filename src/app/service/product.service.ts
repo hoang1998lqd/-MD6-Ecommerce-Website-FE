@@ -5,6 +5,7 @@ import {Observable} from "rxjs";
 import {Category} from "../model/Category";
 import {Brand} from "../model/Brand";
 import {ImageURL} from "../model/ImageURL";
+import {ProductDTO} from "../model/productDTO";
 
 
 
@@ -16,8 +17,8 @@ export class ProductService {
 
 
   constructor(private httpClient: HttpClient) { }
-  findAllProducts(): Observable<Product[]>{
-    return this.httpClient.get<Product[]>("http://localhost:8081/api/products")
+  findAllProducts(): Observable<ProductDTO[]>{
+    return this.httpClient.get<ProductDTO[]>("http://localhost:8081/api/products")
   }
   createProduct(product?: Product): Observable<Product>{
     return this.httpClient.post<Product>("http://localhost:8081/api/products", product)

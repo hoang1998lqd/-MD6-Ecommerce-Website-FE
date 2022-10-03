@@ -4,6 +4,7 @@ import {Observable} from "rxjs";
 import {environment} from "../../environments/environment";
 import {ProductService} from "../service/product.service";
 import {Product} from "../model/Product";
+import {ProductDTO} from "../model/productDTO";
 
 const API_URL= environment.apiUrl+'/api/products';
 
@@ -16,7 +17,8 @@ const API_URL= environment.apiUrl+'/api/products';
 
 export class ShopComponent implements OnInit {
   private searchByName!: string;
-  products: Product[] = []
+  products: ProductDTO[] = []
+
 
 
   constructor(private httpClient: HttpClient,

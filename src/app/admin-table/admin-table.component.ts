@@ -93,8 +93,6 @@ export class AdminTableComponent implements OnInit, AfterContentChecked {
     });
   }
 
-
-
   displayProducts() {
     this.productService.findAllProducts().subscribe(value => {
       this.products = value;

@@ -15,6 +15,8 @@ import {finalize, Observable} from "rxjs";
 })
 export class FormCreateProductComponent implements OnInit, AfterContentChecked {
   downloadURL: Observable<string> | undefined;
+
+  customerCurrentId!: any
   fb: any;
   listURL: any [] = []
   selectedImages: any[] = []
@@ -29,6 +31,9 @@ export class FormCreateProductComponent implements OnInit, AfterContentChecked {
               private dialog: MatDialog,
               private storage : AngularFireStorage) { }
   ngOnInit(): void {
+    localStorage.setItem("idCustomer", "1")
+    // @ts-ignore
+    this.customerCurrentId = parseInt(localStorage.getItem("idCustomer"))
     // @ts-ignore
     this.category_id = document.getElementById("category_id").value
     const script1 = document.createElement('link');
@@ -117,8 +122,9 @@ export class FormCreateProductComponent implements OnInit, AfterContentChecked {
 
   }
   createProduct(){
+    // @ts-ignore
+    let id = parseInt(localStorage.getItem("idCustomer"))
     let product = {
-      id: this.productForm.value.id,
       name: this.productForm.value.name,
       price: this.productForm.value.price,
       amount: this.productForm.value.amount,
@@ -132,10 +138,35 @@ export class FormCreateProductComponent implements OnInit, AfterContentChecked {
         id: this.productForm.value.category
       },
       customer: {
-        id: this.productForm.value.customer
+        id: id
       }
     }
     this.productService.createProduct(product).subscribe(value => {
+      if (this.selectedImages.length !== 0){
+        for (let i = 0; i < this.selectedImages.length; i++) {
+          let selectedImage = this.selectedImages[i];
+          var n = Date.now();
+          const filePath = `Images/${n}`;
+          const fileRef = this.storage.ref(filePath);
+          this.storage.upload(filePath, selectedImage).snapshotChanges().pipe(
+            finalize(() =>{
+              fileRef.getDownloadURL().subscribe(url => {
+                console.log(url)
+                this.listURL.push(url)
+                let image= {
+                    name: url,
+                    product :{
+                      id:value.id
+                    }
+                }
+                this.productService.saveImage(image).subscribe(() => {
+                  console.log("Create Successfully")
+                })
+              });
+            })
+          ).subscribe()
+        }
+      }
       console.log(value)
       this.createSuccess()
       // @ts-ignore
@@ -178,7 +209,8 @@ export class FormCreateProductComponent implements OnInit, AfterContentChecked {
             });
           })
         ).subscribe()
-      }    }
+      }
+    }
   }
 
   showPreview(event: any){

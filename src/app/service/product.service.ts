@@ -44,4 +44,12 @@ export class ProductService {
   getNewProductId(){
     return this.httpClient.get<any>("http://localhost:8081/api/products/new-product")
   }
+
+  updateImage(img?: ImageURL): Observable<ImageURL>{
+    return this.httpClient.put<ImageURL>("http://localhost:8081/api/products/update-img", img)
+  }
+  getIdImageUpdate(id?: number): Observable<any>{
+    return  this.httpClient.get<any>("http://localhost:8081/api/products/product-update/" + id)
+  }
+
 }

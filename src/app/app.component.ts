@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
-import {AdminTableComponent} from "./admin-table/admin-table.component";
 
 
 @Component({
@@ -10,7 +9,7 @@ import {AdminTableComponent} from "./admin-table/admin-table.component";
 })
 export class AppComponent {
   title = 'fe_angular';
-  constructor(private dialog : MatDialog) {
+  constructor() {
   }
 
 }

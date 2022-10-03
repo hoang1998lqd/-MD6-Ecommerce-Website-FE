@@ -3,8 +3,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {ProductService} from "../service/product.service";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {Product} from "../model/Product";
-import {Brand} from "../model/Brand";
-import Swal from 'sweetalert2'
+import {Brand} from "../model/Brand";import Swal from 'sweetalert2'
 import {FormCreateProductComponent} from "../form-create-product/form-create-product.component";
 import {ProductDTO} from "../model/ProductDTO";
 import {MatTableDataSource, MatTableModule} from "@angular/material/table";
@@ -23,7 +22,7 @@ export class AdminTableComponent implements OnInit, AfterContentChecked , AfterV
   products: ProductDTO [] = []
   brands: Product [] = []
   categories: Product [] = []
-  listBrandByCategory: Brand [] = []
+  idProductUpdate!: number;
   productForm!: FormGroup;
 
   // displayedColumns: string[] = ['name','price','amount','color','description','image']
@@ -38,8 +37,8 @@ export class AdminTableComponent implements OnInit, AfterContentChecked , AfterV
         // @ts-ignore
     this.listProduct.sort = this.sort
     }
-  @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
-  @ViewChild(MatSort) sort: MatSort | undefined;
+  @ViewChild(MatPaginator) paginator!: MatPaginator ;
+  @ViewChild(MatSort) sort!: MatSort ;
   @ViewChild('empTbSort') empTbSort = new MatSort();
   @ViewChild('empTbSortWithObject') empTbSortWithObject = new MatSort();
 
@@ -110,22 +109,22 @@ export class AdminTableComponent implements OnInit, AfterContentChecked , AfterV
   }
   openDialog() {
     const dialogRef = this.dialog.open(FormCreateProductComponent);
-
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+      if (result === 'Create'){
+        this.displayProducts();
+      }
     });
   }
 
   displayProducts() {
     this.productService.findAllProducts().subscribe(value => {
+      // @ts-ignore
       this.listProduct = new MatTableDataSource(value)
       // @ts-ignore
       this.listProduct.paginator = this.paginator
+      this.listProduct.connect()
 
-      // @ts-ignore
-      this.listProduct.sort = this.sort
-      this.products = value;
-      let dataSourceWithObjectColumn = new MatTableDataSource(value);
+
     })
   }
   displayBrands() {
@@ -140,55 +139,49 @@ export class AdminTableComponent implements OnInit, AfterContentChecked , AfterV
     })
   }
 
-  findBrandByCategory(id: number){
-    this.productService.findBrandByCategory(id).subscribe(value => {
-      this.listBrandByCategory = value;
-    })
-  }
-  createProduct(){
-    let product = {
-      id: this.productForm.value.id,
-      name: this.productForm.value.name,
-      price: this.productForm.value.price,
-      amount: this.productForm.value.amount,
-      color: this.productForm.value.color,
-      description: this.productForm.value.description,
-      discount: this.productForm.value.discount,
-      brand: {
-        id: this.productForm.value.brand
-      },
-      category: {
-        id: this.productForm.value.category
-      },
-      customer: {
-        id: this.productForm.value.customer
+  deleteProduct(id: number){
+    // this.productService.deleteProduct(id)
+    Swal.fire({
+      title: 'Bạn có chắc chắn muốn xóa?',
+      text: "Dữ liệu sẽ không thể khôi phục!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Đồng ý!',
+      cancelButtonText: 'Hủy',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.productService.deleteProduct(id).subscribe(value => {
+          this.displayProducts()
+        }, error => {
+          Swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: 'Xóa thất bại',
+            showConfirmButton: false,
+            timer: 1500
+          })
+        })
+        Swal.fire(
+          'Xóa thành công!',
+          'Dữ liệu đã bị xóa bỏ',
+          'success'
+        )
       }
-    }
-    this.productService.createProduct(product).subscribe(value => {
-      console.log(value)
-      this.createSuccess()
-      // @ts-ignore
-      this.displayProducts()
-    }, error => {
-      Swal.fire({
-        position: 'center',
-        icon: 'error',
-        title: 'Tạo mới thất bại',
-        showConfirmButton: false,
-        timer: 1500
+    })
+
+  }
+
+  getProductUpdate(id: number){
+    this.productService.getProductById(id).subscribe(value => {
+      this.dialog.open(FormCreateProductComponent,{width : '30%', data : value}).afterClosed().subscribe(value1 => {
+        if (value1 === 'Update'){
+          this.displayProducts()
+        }
       })
     })
   }
 
-
-  createSuccess() {
-    Swal.fire({
-      position: 'center',
-      icon: 'success',
-      title: 'Tạo mới thành công',
-      showConfirmButton: false,
-      timer: 1500
-    })
-  }
 
 }

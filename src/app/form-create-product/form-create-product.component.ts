@@ -1,30 +1,36 @@
 import {AfterContentChecked, Component, OnInit} from '@angular/core';
-import {MatDialog} from "@angular/material/dialog";
-import {ProductService} from "../service/product.service";
-import {FormBuilder, FormGroup} from "@angular/forms";
 import {Product} from "../model/Product";
 import {Brand} from "../model/Brand";
-import {Category} from "../model/Category";
-import {Customer} from "../model/Customer";
-import Swal from 'sweetalert2'
-import {FormCreateProductComponent} from "../form-create-product/form-create-product.component";
-
+import {FormBuilder, FormGroup} from "@angular/forms";
+import {ProductService} from "../service/product.service";
+import {MatDialog} from "@angular/material/dialog";
+import Swal from "sweetalert2";
+import {AngularFireStorage, AngularFireStorageReference, AngularFireUploadTask} from "@angular/fire/compat/storage";
+import {finalize, Observable} from "rxjs";
 
 @Component({
-  selector: 'app-admin-table',
-  templateUrl: './admin-table.component.html',
-  styleUrls: ['./admin-table.component.css']
+  selector: 'app-form-create-product',
+  templateUrl: './form-create-product.component.html',
+  styleUrls: ['./form-create-product.component.css']
 })
-export class AdminTableComponent implements OnInit, AfterContentChecked {
+export class FormCreateProductComponent implements OnInit, AfterContentChecked {
+  downloadURL: Observable<string> | undefined;
+  fb: any;
+  listURL: any [] = []
+  selectedImages: any[] = []
   products: Product [] = []
   brands: Product [] = []
   categories: Product [] = []
   listBrandByCategory: Brand [] = []
   productForm!: FormGroup;
+  category_id!: number
   constructor(private productService: ProductService,
               private formGroup: FormBuilder,
-              private dialog: MatDialog ) { }
+              private dialog: MatDialog,
+              private storage : AngularFireStorage) { }
   ngOnInit(): void {
+    // @ts-ignore
+    this.category_id = document.getElementById("category_id").value
     const script1 = document.createElement('link');
     script1.href = "./assets/admin/vendor/fontawesome-free/css/all.min.css";
     script1.rel = "stylesheet";
@@ -85,15 +91,6 @@ export class AdminTableComponent implements OnInit, AfterContentChecked {
     script11.src = "./assets/admin/js/demo/datatables-demo.js";
     document.body.appendChild(script11);
   }
-  openDialog() {
-    const dialogRef = this.dialog.open(FormCreateProductComponent);
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-    });
-  }
-
-
 
   displayProducts() {
     this.productService.findAllProducts().subscribe(value => {
@@ -112,10 +109,12 @@ export class AdminTableComponent implements OnInit, AfterContentChecked {
     })
   }
 
-  findBrandByCategory(id: number){
+  findBrandByCategory(){
+    let id = this.productForm.value.category
     this.productService.findBrandByCategory(id).subscribe(value => {
       this.listBrandByCategory = value;
     })
+
   }
   createProduct(){
     let product = {
@@ -163,4 +162,35 @@ export class AdminTableComponent implements OnInit, AfterContentChecked {
     })
   }
 
+  createImage() {
+    if (this.selectedImages.length !== 0){
+      for (let i = 0; i < this.selectedImages.length; i++) {
+        let selectedImage = this.selectedImages[i];
+        var n = Date.now();
+        const filePath = `Images/${n}`;
+        const fileRef = this.storage.ref(filePath);
+        this.storage.upload(filePath, selectedImage).snapshotChanges().pipe(
+          finalize(() =>{
+            fileRef.getDownloadURL().subscribe(url => {
+              console.log(url)
+              this.listURL.push(url)
+
+            });
+          })
+        ).subscribe()
+      }    }
+  }
+
+  showPreview(event: any){
+    if (event.target.files && event.target.files[0]){
+      const reader = new FileReader();
+      reader.readAsDataURL(event.target.files[0]);
+      this.selectedImages = event.target.files;
+      console.log(this.selectedImages)
+    }else {
+      this.selectedImages = []
+    }
+    this.createImage();
+
+  }
 }

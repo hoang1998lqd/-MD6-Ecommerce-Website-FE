@@ -1,4 +1,7 @@
 import {Component, OnInit} from '@angular/core';
+import {MatDialog} from "@angular/material/dialog";
+import {AdminTableComponent} from "./admin-table/admin-table.component";
+
 
 @Component({
   selector: 'app-root',
@@ -7,4 +10,9 @@ import {Component, OnInit} from '@angular/core';
 })
 export class AppComponent {
   title = 'fe_angular';
+  constructor(private dialog : MatDialog) {
+  }
+
 }
+
+

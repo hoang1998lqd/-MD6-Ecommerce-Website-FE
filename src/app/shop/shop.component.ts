@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {environment} from "../../environments/environment";
+import {ProductService} from "../service/product.service";
+import {Product} from "../model/Product";
 
 const API_URL= environment.apiUrl+'/api/products';
 
@@ -14,22 +16,26 @@ const API_URL= environment.apiUrl+'/api/products';
 
 export class ShopComponent implements OnInit {
   private searchByName!: string;
+  products: Product[] = []
 
-  constructor(private httpclient: HttpClient) { }
+
+  constructor(private httpClient: HttpClient,
+              private productService: ProductService) { }
 
   ngOnInit(): void {
     const script1 = document.createElement('script');
     script1.src = './assets/js/vendor/modernizr-2.8.3.min.js';
     document.body.appendChild(script1);
-    // this.displayProduct()
+    this.displayProduct()
   }
-  // displayProduct(){
-  //   this.productService.findAll().subscribe(data => {
-  //     this.products = data
-  //   }) }
+  displayProduct(){
+    this.productService.findAllProducts().subscribe(data => {
+      this.products = data
+      console.log(data)
+    }) }
 
-  findProductByName(): Observable<any> {
-    return this.httpclient.get(API_URL+'/find-name-products?'+this.searchByName);
+  findProductByName(): Observable<Product[]> {
+    return this.httpClient.get<Product[]>(API_URL+'/find-name-products?'+this.searchByName);
   }
 
   ngAfterContentInit(){

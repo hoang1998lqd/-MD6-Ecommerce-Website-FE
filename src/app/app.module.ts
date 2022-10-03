@@ -12,6 +12,22 @@ import { LoginRegisterComponent } from './login-register/login-register.componen
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { AdminComponent } from './admin/admin.component';
 import { AdminTableComponent } from './admin-table/admin-table.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatButtonModule} from "@angular/material/button";
+import {MatIconModule} from "@angular/material/icon";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+
+import { FormCreateProductComponent } from './form-create-product/form-create-product.component';
+import {MatSelectModule} from "@angular/material/select";
+// @ts-ignore
+import {AngularFireStorageModule} from "@angular/fire/compat/storage";
+import {environment} from "../environments/environment";
+// @ts-ignore
+import {AngularFireAuth, AngularFireAuthModule} from "@angular/fire/compat/auth";
+// @ts-ignore
+import {AngularFireModule} from "@angular/fire/compat";
 
 
 @NgModule({
@@ -24,15 +40,28 @@ import { AdminTableComponent } from './admin-table/admin-table.component';
     LoginRegisterComponent,
     PageNotFoundComponent,
     AdminComponent,
-    AdminTableComponent
+    AdminTableComponent,
+    FormCreateProductComponent
+
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    ReactiveFormsModule,
-    FormsModule,
-    HttpClientModule,
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        ReactiveFormsModule,
+        FormsModule,
+        HttpClientModule,
+        BrowserAnimationsModule,
+        MatDialogModule,
+        MatButtonModule,
+        MatIconModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        AngularFireStorageModule,
+        AngularFireAuthModule,
+        // Khởi tạo vào gọi tới Environment được khai báo biến ở trong environment
+        AngularFireModule.initializeApp(environment.firebaseConfig),
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

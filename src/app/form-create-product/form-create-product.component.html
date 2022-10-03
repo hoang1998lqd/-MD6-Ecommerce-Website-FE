@@ -1,0 +1,68 @@
+<h2 mat-dialog-title>Add Product Form</h2>
+<mat-dialog-content class="mat-typography">
+  <!---->
+ <form [formGroup]="productForm">
+   <mat-form-field appearance="outline" >
+     <mat-label>Name</mat-label>
+     <input matInput placeholder="Placeholder" formControlName="name">
+     <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+   </mat-form-field>
+   <mat-form-field appearance="outline" >
+     <mat-label>Price</mat-label>
+     <input matInput placeholder="Placeholder" formControlName="price">
+     <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+   </mat-form-field>
+
+   <mat-form-field appearance="outline" >
+     <mat-label>Amount</mat-label>
+     <input matInput placeholder="Placeholder" formControlName="amount">
+     <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+   </mat-form-field>
+
+   <mat-form-field appearance="outline" >
+     <mat-label>Color</mat-label>
+     <input matInput placeholder="Placeholder" formControlName="color">
+     <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+   </mat-form-field>
+
+   <mat-form-field appearance="outline">
+     <mat-label>Description</mat-label>
+     <textarea matInput placeholder="Description" formControlName="description"></textarea>
+     <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+   </mat-form-field>
+
+   <mat-form-field appearance="outline" >
+     <mat-label>Discount</mat-label>
+     <input matInput placeholder="Placeholder" formControlName="discount">
+     <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+   </mat-form-field>
+
+   <mat-form-field appearance="outline">
+     <mat-label>Category</mat-label>
+     <mat-select formControlName="category" id="category_id" (ngModelChange)="findBrandByCategory()">
+       <mat-option *ngFor="let category of categories" [value] = "category.id">{{category.name}}</mat-option>
+     </mat-select>
+   </mat-form-field>
+   <mat-form-field appearance="outline">
+     <mat-label>Brand</mat-label>
+     <mat-select formControlName="category">
+       <mat-option *ngFor="let brand of listBrandByCategory" [value]="brand.id">{{brand.name}}</mat-option>
+     </mat-select>
+   </mat-form-field>
+   <div class="custom-file">
+     <input type="file" id="file" #userPhoto multiple
+            (change)="showPreview($event)" name="image" autocomplete="off" class="custom-file-input"
+            id = "inputGroupFile01">
+     <label for="inputGroupFile01" class="custom-file-label">Choose File</label>
+
+   </div>
+   <img *ngFor="let url of listURL" src="{{url}}" width="20%" height="20%" style="margin-left: 20px" alt="Error">
+ </form>
+
+  <!---->
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button [mat-dialog-close]="true" mat-stroked-button color="primary" cdkFocusInitial>Create</button>
+</mat-dialog-actions>

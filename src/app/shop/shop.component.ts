@@ -1,18 +1,35 @@
 import { Component, OnInit } from '@angular/core';
+import {HttpClient} from "@angular/common/http";
+import {Observable} from "rxjs";
+import {environment} from "../../environments/environment";
+
+const API_URL= environment.apiUrl+'/api/products';
 
 @Component({
   selector: 'app-shop',
   templateUrl: './shop.component.html',
   styleUrls: ['./shop.component.css']
 })
-export class ShopComponent implements OnInit {
 
-  constructor() { }
+
+export class ShopComponent implements OnInit {
+  private searchByName!: string;
+
+  constructor(private httpclient: HttpClient) { }
 
   ngOnInit(): void {
     const script1 = document.createElement('script');
     script1.src = './assets/js/vendor/modernizr-2.8.3.min.js';
     document.body.appendChild(script1);
+    // this.displayProduct()
+  }
+  // displayProduct(){
+  //   this.productService.findAll().subscribe(data => {
+  //     this.products = data
+  //   }) }
+
+  findProductByName(): Observable<any> {
+    return this.httpclient.get(API_URL+'/find-name-products?'+this.searchByName);
   }
 
   ngAfterContentInit(){

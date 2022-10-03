@@ -1,13 +1,16 @@
-import {AfterContentChecked, Component, OnInit} from '@angular/core';
+import {AfterContentChecked, AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
 import {ProductService} from "../service/product.service";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {Product} from "../model/Product";
 import {Brand} from "../model/Brand";
-import {Category} from "../model/Category";
-import {Customer} from "../model/Customer";
 import Swal from 'sweetalert2'
 import {FormCreateProductComponent} from "../form-create-product/form-create-product.component";
+import {ProductDTO} from "../model/ProductDTO";
+import {MatTableDataSource, MatTableModule} from "@angular/material/table";
+import {MatSort, Sort} from "@angular/material/sort";
+import {MatPaginator} from "@angular/material/paginator";
+import {LiveAnnouncer} from "@angular/cdk/a11y";
 
 
 @Component({
@@ -15,15 +18,31 @@ import {FormCreateProductComponent} from "../form-create-product/form-create-pro
   templateUrl: './admin-table.component.html',
   styleUrls: ['./admin-table.component.css']
 })
-export class AdminTableComponent implements OnInit, AfterContentChecked {
-  products: Product [] = []
+export class AdminTableComponent implements OnInit, AfterContentChecked , AfterViewInit{
+  listProduct!: MatTableDataSource<ProductDTO>
+  products: ProductDTO [] = []
   brands: Product [] = []
   categories: Product [] = []
   listBrandByCategory: Brand [] = []
   productForm!: FormGroup;
+
+  // displayedColumns: string[] = ['name','price','amount','color','description','image']
+  displayedColumns: string[] = ['stt','name', 'price', 'amount', 'color','image','edit','delete'];
+
   constructor(private productService: ProductService,
               private formGroup: FormBuilder,
-              private dialog: MatDialog ) { }
+              private dialog: MatDialog ,
+              private _liveAnnouncer: LiveAnnouncer) { }
+
+  ngAfterViewInit(): void {
+        // @ts-ignore
+    this.listProduct.sort = this.sort
+    }
+  @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
+  @ViewChild(MatSort) sort: MatSort | undefined;
+  @ViewChild('empTbSort') empTbSort = new MatSort();
+  @ViewChild('empTbSortWithObject') empTbSortWithObject = new MatSort();
+
   ngOnInit(): void {
     const script1 = document.createElement('link');
     script1.href = "./assets/admin/vendor/fontawesome-free/css/all.min.css";
@@ -45,6 +64,10 @@ export class AdminTableComponent implements OnInit, AfterContentChecked {
     const script4 = document.createElement('body');
     script4.id = "page-top"
     document.body.appendChild(script4);
+    const script5 = document.createElement('link');
+    script2.href = "https://use.fontawesome.com/releases/v5.2.0/css/all.css\" integrity=\"sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ\" crossorigin=\"anonymous";
+    script2.rel = "stylesheet";
+    document.body.appendChild(script5);
     this.displayProducts()
     this.displayBrands()
     this.displayCategories()
@@ -95,7 +118,14 @@ export class AdminTableComponent implements OnInit, AfterContentChecked {
 
   displayProducts() {
     this.productService.findAllProducts().subscribe(value => {
+      this.listProduct = new MatTableDataSource(value)
+      // @ts-ignore
+      this.listProduct.paginator = this.paginator
+
+      // @ts-ignore
+      this.listProduct.sort = this.sort
       this.products = value;
+      let dataSourceWithObjectColumn = new MatTableDataSource(value);
     })
   }
   displayBrands() {

@@ -7,6 +7,7 @@ import {MatDialog} from "@angular/material/dialog";
 import Swal from "sweetalert2";
 import {AngularFireStorage, AngularFireStorageReference, AngularFireUploadTask} from "@angular/fire/compat/storage";
 import {finalize, Observable} from "rxjs";
+import {ProductDTO} from "../model/ProductDTO";
 
 @Component({
   selector: 'app-form-create-product',
@@ -20,7 +21,7 @@ export class FormCreateProductComponent implements OnInit, AfterContentChecked {
   fb: any;
   listURL: any [] = []
   selectedImages: any[] = []
-  products: Product [] = []
+  products: ProductDTO [] = []
   brands: Product [] = []
   categories: Product [] = []
   listBrandByCategory: Brand [] = []

@@ -18,7 +18,7 @@ export class ShopComponent implements OnInit {
   products: ProductDTO [] = []
   brands: Brand [] = []
   categories: Category [] = []
-
+  roles: any[] = []
   brandsLaptop: Brand [] = []
   brandsPhone: Brand [] = []
   brandsTv: Brand [] = []
@@ -26,7 +26,9 @@ export class ShopComponent implements OnInit {
   brandsFridge: Brand [] = []
   brandsTablet: Brand [] = []
   items: Item [] = []
-
+  listProduct: ProductDTO [] = []
+  // @ts-ignore
+  idCustomerCurrent!: number
   constructor(private productService: ProductService,
               private cartService: CartService
   ) {
@@ -46,6 +48,7 @@ export class ShopComponent implements OnInit {
     this.findBrandByPhone()
     this.findBrandByTablet()
     this.displayItem()
+    this.findProductByCustomerId()
   }
 
   ngAfterContentInit() {
@@ -114,13 +117,26 @@ export class ShopComponent implements OnInit {
     document.body.appendChild(script22);
   }
 
+  // Product của người bán hàng
   displayProducts() {
     // @ts-ignore
     let idCustomer = parseInt(localStorage.getItem("idCustomer"))
     this.productService.findAllProductByCustomerId(idCustomer).subscribe(value => {
-      this.products = value;
+      this.products= value
     })
   }
+
+  //Products của người mua hàng gồm cả người bán hàng nhưng không có sản phẩm của người bán đó
+  // Đấy là list Product hiển thị trên trang bán hàng
+  findProductByCustomerId(){
+    // @ts-ignore
+    let idCustomer = parseInt(localStorage.getItem("idCustomer"))
+    this.productService.findAllProductNotCustomerId(idCustomer).subscribe(value => {
+      this.listProduct = value
+    })
+  }
+
+
   displayItem(){
     // @ts-ignore
     let idCustomer = parseInt(localStorage.getItem("idCustomer"))
@@ -130,6 +146,7 @@ export class ShopComponent implements OnInit {
   }
 
   addToCart(idProduct?: number) {
+
     // @ts-ignore
     let idCustomer = parseInt(localStorage.getItem("idCustomer"))
     this.cartService.findAllItemByCustomerId(idCustomer).subscribe(value => {
@@ -186,7 +203,6 @@ export class ShopComponent implements OnInit {
     })
 
   }
-
 
   deleteItem(idItem?: number){
     Swal.fire({
@@ -274,17 +290,22 @@ export class ShopComponent implements OnInit {
       this.brandsTablet = value
     })
   }
-
-  // @ts-ignore
-  findBrandByCategoryId(idCategory : number):Brand[]{
-    let brands:Brand [] = []
-     this.productService.findBrandByCategory(idCategory).subscribe(value => {
-        brands = value
-       return brands;
-     })
-
-
+  findImageURLFirst(idProduct: any): any {
+    let imageURL: any;
+    let flag = false;
+    if (idProduct != null){
+      for (let i = 0; i < this.listProduct.length; i++) {
+        // @ts-ignore
+        if (this.listProduct[i].product.id == idProduct){
+          flag = true
+          // @ts-ignore
+          imageURL = this.listProduct[i].imageURLS[0]
+          return imageURL;
+        }
+      }
+    }
   }
+
 
   addItemToCartSuccess() {
     Swal.fire({
@@ -296,15 +317,15 @@ export class ShopComponent implements OnInit {
     })
   }
 
-  changePrice(money: any) : any {
+  changePrice(money?: number) : any {
     const formatter = new Intl.NumberFormat('it-IT', {
       style: 'currency',
       currency: 'VND',
-      // minimumFractionDigits: 2
     })
-    return formatter.format(money);
+    if (money != null){
+      return formatter.format(money);
+    }
+
   }
-  set(){
-    alert(4)
-  }
+
 }

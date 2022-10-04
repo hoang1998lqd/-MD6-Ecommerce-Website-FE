@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {ProductService} from "../service/product.service";
 import {CartService} from "../service/cart.service";
 import {Item} from "../model/Item";
+import Swal from "sweetalert2";
+import {ProductDTO} from "../model/ProductDTO";
 
 @Component({
   selector: 'app-shopping-cart',
@@ -10,6 +12,7 @@ import {Item} from "../model/Item";
 })
 export class ShoppingCartComponent implements OnInit {
   items: Item [] = []
+  listProduct: ProductDTO [] = []
   constructor(private productService: ProductService,
               private cartService: CartService) { }
 
@@ -18,6 +21,7 @@ export class ShoppingCartComponent implements OnInit {
     script1.src = './assets/js/vendor/modernizr-2.8.3.min.js';
     document.body.appendChild(script1);
     this.displayItem()
+    this.findProductByCustomerId()
   }
 
   ngAfterContentInit(){
@@ -92,5 +96,84 @@ export class ShoppingCartComponent implements OnInit {
       this.items = value;
     })
   }
+  deleteItem(idItem?: number){
+    Swal.fire({
+      title: 'Xóa sản phẩm',
+      text: "Xóa sản phẩm khỏi giỏ hàng",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Đồng ý!',
+      cancelButtonText: 'Hủy',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.cartService.deleteItem(idItem).subscribe(value => {
 
+        }, error => {
+          Swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: 'Xóa thất bại',
+            showConfirmButton: false,
+            timer: 1500
+          })
+        })
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Xóa sản phẩm thành công',
+          showConfirmButton: false,
+          timer: 1500
+        })
+      }
+      this.ngOnInit()
+      // @ts-ignore
+      document.getElementById('cart').style.display = "none"
+
+    })
+
+  }
+
+
+  changePrice(money?: number) : any {
+    const formatter = new Intl.NumberFormat('it-IT', {
+      style: 'currency',
+      currency: 'VND',
+      // minimumFractionDigits: 2
+    })
+    if (money != null){
+      return formatter.format(money);
+    }
+  }
+  //Products của người mua hàng gồm cả người bán hàng nhưng không có sản phẩm của người bán đó
+  // Đấy là list Product hiển thị trên trang bán hàng
+  findProductByCustomerId(){
+    // @ts-ignore
+    let idCustomer = parseInt(localStorage.getItem("idCustomer"))
+    this.productService.findAllProductNotCustomerId(idCustomer).subscribe(value => {
+      this.listProduct = value
+    })
+  }
+
+  updateQuantityItem(){
+
+  }
+
+
+  findImageURLFirst(idProduct: any): any {
+    let imageURL: any;
+    let flag = false;
+    if (idProduct != null){
+      for (let i = 0; i < this.listProduct.length; i++) {
+        // @ts-ignore
+        if (this.listProduct[i].product.id == idProduct){
+          flag = true
+          // @ts-ignore
+          imageURL = this.listProduct[i].imageURLS[0]
+          return imageURL;
+        }
+      }
+    }
+  }
 }

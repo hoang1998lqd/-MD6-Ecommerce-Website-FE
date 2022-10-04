@@ -55,4 +55,9 @@ export class ProductService {
     return this.httpClient.get<ProductDTO[]>("http://localhost:8081/api/products/customer/" + id)
   }
 
+  findAllProductNotCustomerId(idCustomer?: number): Observable<ProductDTO[]>{
+    return this.httpClient.get<ProductDTO[]>("http://localhost:8081/api/products/not-customer/" + idCustomer)
+  }
+
+
 }

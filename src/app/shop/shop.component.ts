@@ -16,7 +16,6 @@ const API_URL= environment.apiUrl+'/api/products';
 
 
 export class ShopComponent implements OnInit {
-  private searchByName!: string;
   products: ProductDTO[] = []
 
 
@@ -33,11 +32,14 @@ export class ShopComponent implements OnInit {
   displayProduct(){
     this.productService.findAllProducts().subscribe(data => {
       this.products = data
-      console.log(data)
     }) }
-
-  findProductByName(): Observable<Product[]> {
-    return this.httpClient.get<Product[]>(API_URL+'/find-name-products?'+this.searchByName);
+  searchByNameProduct() {
+    // @ts-ignore
+    let name = document.getElementById("searchByName").value
+    this.productService.findProductByName(name).subscribe(value => {
+      this.products = value;
+      console.log(value)
+    })
   }
 
   ngAfterContentInit(){

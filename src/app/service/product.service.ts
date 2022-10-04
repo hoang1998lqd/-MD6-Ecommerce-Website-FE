@@ -33,10 +33,10 @@ export class ProductService {
     return this.httpClient.get<Category[]>("http://localhost:8081/api/categories")
   }
   findAllBrands(): Observable<Brand[]>{
-    return this.httpClient.get<Category[]>("http://localhost:8081/api/brands")
+    return this.httpClient.get<Brand[]>("http://localhost:8081/api/brands")
   }
   findBrandByCategory(id?: number): Observable<Brand[]>{
-    return this.httpClient.get<Category[]>("http://localhost:8081/api/brands/" + id)
+    return this.httpClient.get<Brand[]>("http://localhost:8081/api/brands/" + id)
   }
   saveImage(image?: ImageURL): Observable<ImageURL>{
     return this.httpClient.post<ImageURL>("http://localhost:8081/api/products/imageURL", image)
@@ -50,6 +50,9 @@ export class ProductService {
   }
   getIdImageUpdate(id?: number): Observable<any>{
     return  this.httpClient.get<any>("http://localhost:8081/api/products/product-update/" + id)
+  }
+  findAllProductByCustomerId(id?: number): Observable<ProductDTO[]>{
+    return this.httpClient.get<ProductDTO[]>("http://localhost:8081/api/products/customer/" + id)
   }
 
 }

@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import {ProductService} from "../service/product.service";
+import {CartService} from "../service/cart.service";
+import {Item} from "../model/Item";
 
 @Component({
   selector: 'app-shopping-cart',
@@ -6,13 +9,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./shopping-cart.component.css']
 })
 export class ShoppingCartComponent implements OnInit {
-
-  constructor() { }
+  items: Item [] = []
+  constructor(private productService: ProductService,
+              private cartService: CartService) { }
 
   ngOnInit(): void {
     const script1 = document.createElement('script');
     script1.src = './assets/js/vendor/modernizr-2.8.3.min.js';
     document.body.appendChild(script1);
+    this.displayItem()
   }
 
   ngAfterContentInit(){
@@ -80,6 +85,12 @@ export class ShoppingCartComponent implements OnInit {
     script22.src = '/assets/js/main.js';
     document.body.appendChild(script22);
   }
-
+  displayItem(){
+    // @ts-ignore
+    let idCustomer = parseInt(localStorage.getItem("idCustomer"))
+    this.cartService.findAllItemByCustomerId(idCustomer).subscribe(value => {
+      this.items = value;
+    })
+  }
 
 }

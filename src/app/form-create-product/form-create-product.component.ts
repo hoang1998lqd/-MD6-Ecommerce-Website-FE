@@ -73,12 +73,12 @@ export class FormCreateProductComponent implements OnInit, AfterContentChecked {
     this.productForm = this.formGroup.group({
       id: [''],
       name: ['',Validators.required],
-      price: ['',Validators.required,Validators.pattern("[1-9]")],
-      amount: ['',Validators.required,Validators.pattern("[1-9]")],
+      price: ['',[Validators.required,Validators.pattern("[1-9]")]],
+      amount: ['',Validators.required],
       color: ['',Validators.required],
       description: [''],
       status: [''],
-      discount: ['',Validators.pattern("[1-9]")],
+      discount: ['',Validators.pattern("[0-9]")],
       brand: ['',Validators.required],
       category: ['',Validators.required],
       customer: [''],
@@ -86,6 +86,10 @@ export class FormCreateProductComponent implements OnInit, AfterContentChecked {
     if (this.editData){
       this.actionBtn = "Update"
       this.productForm.patchValue(this.editData)
+      this.productForm.controls['color'].setValue(this.editData.color)
+      this.productForm.controls['description'].setValue(this.editData.description)
+      this.productForm.controls['discount'].setValue(this.editData.discount)
+
       this.idBrandUpdate = this.editData.brand.id;
       this.idCategoryUpdate = this.editData.category.id;
       this.idProductUpdate = this.editData.id;

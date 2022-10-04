@@ -10,6 +10,7 @@ import {MatTableDataSource, MatTableModule} from "@angular/material/table";
 import {MatSort, Sort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
 import {LiveAnnouncer} from "@angular/cdk/a11y";
+import {Category} from "../model/Category";
 
 
 @Component({
@@ -20,12 +21,9 @@ import {LiveAnnouncer} from "@angular/cdk/a11y";
 export class AdminTableComponent implements OnInit, AfterContentChecked , AfterViewInit{
   listProduct!: MatTableDataSource<ProductDTO>
   products: ProductDTO [] = []
-  brands: Product [] = []
-  categories: Product [] = []
-  idProductUpdate!: number;
+  brands: Brand [] = []
+  categories: Category [] = []
   productForm!: FormGroup;
-
-  // displayedColumns: string[] = ['name','price','amount','color','description','image']
   displayedColumns: string[] = ['stt','name', 'price', 'amount', 'color','image','edit','delete'];
 
   constructor(private productService: ProductService,
@@ -117,7 +115,9 @@ export class AdminTableComponent implements OnInit, AfterContentChecked , AfterV
   }
 
   displayProducts() {
-    this.productService.findAllProducts().subscribe(value => {
+    // @ts-ignore
+    let idCustomer = parseInt(localStorage.getItem("idCustomer"))
+    this.productService.findAllProductByCustomerId(idCustomer).subscribe(value => {
       // @ts-ignore
       this.listProduct = new MatTableDataSource(value)
       // @ts-ignore
@@ -175,11 +175,7 @@ export class AdminTableComponent implements OnInit, AfterContentChecked , AfterV
 
   getProductUpdate(id: number){
     this.productService.getProductById(id).subscribe(value => {
-      this.dialog.open(FormCreateProductComponent,{width : '30%', data : value}).afterClosed().subscribe(value1 => {
-        if (value1 === 'Update'){
-          this.displayProducts()
-        }
-      })
+      this.dialog.open(FormCreateProductComponent,{width : '30%', data : value})
     })
   }
 

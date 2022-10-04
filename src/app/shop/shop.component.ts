@@ -1,4 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {ProductDTO} from "../model/ProductDTO";
+import {ProductService} from "../service/product.service";
+import {MatTableDataSource} from "@angular/material/table";
+import {Brand} from "../model/Brand";
+import {Category} from "../model/Category";
+import {Product} from "../model/Product";
+import {CartService} from "../service/cart.service";
+import {Item} from "../model/Item";
+import Swal from "sweetalert2";
 
 @Component({
   selector: 'app-shop',
@@ -6,16 +15,40 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./shop.component.css']
 })
 export class ShopComponent implements OnInit {
+  products: ProductDTO [] = []
+  brands: Brand [] = []
+  categories: Category [] = []
 
-  constructor() { }
+  brandsLaptop: Brand [] = []
+  brandsPhone: Brand [] = []
+  brandsTv: Brand [] = []
+  brandsCamera: Brand [] = []
+  brandsFridge: Brand [] = []
+  brandsTablet: Brand [] = []
+  items: Item [] = []
+
+  constructor(private productService: ProductService,
+              private cartService: CartService
+  ) {
+  }
 
   ngOnInit(): void {
     const script1 = document.createElement('script');
     script1.src = './assets/js/vendor/modernizr-2.8.3.min.js';
     document.body.appendChild(script1);
+    this.displayProducts()
+    this.displayBrands();
+    this.displayCategories()
+    this.findBrandByFridge()
+    this.findBrandByCamera()
+    this.findBrandByTv()
+    this.findBrandByLaptop()
+    this.findBrandByPhone()
+    this.findBrandByTablet()
+    this.displayItem()
   }
 
-  ngAfterContentInit(){
+  ngAfterContentInit() {
     const script2 = document.createElement('script');
     script2.src = './assets/js/vendor/jquery-1.12.4.min.js';
     document.body.appendChild(script2);
@@ -81,5 +114,197 @@ export class ShopComponent implements OnInit {
     document.body.appendChild(script22);
   }
 
+  displayProducts() {
+    // @ts-ignore
+    let idCustomer = parseInt(localStorage.getItem("idCustomer"))
+    this.productService.findAllProductByCustomerId(idCustomer).subscribe(value => {
+      this.products = value;
+    })
+  }
+  displayItem(){
+    // @ts-ignore
+    let idCustomer = parseInt(localStorage.getItem("idCustomer"))
+    this.cartService.findAllItemByCustomerId(idCustomer).subscribe(value => {
+      this.items = value;
+    })
+  }
 
+  addToCart(idProduct?: number) {
+    // @ts-ignore
+    let idCustomer = parseInt(localStorage.getItem("idCustomer"))
+    this.cartService.findAllItemByCustomerId(idCustomer).subscribe(value => {
+      this.items = value;
+      let flag = false;
+      for (let i = 0; i < this.items.length; i++) {
+        if (this.items[i].product!.id == idProduct) {
+          flag = true;
+          // @ts-ignore
+          let quantity = this.items[i].quantity + 1;
+          // @ts-ignore
+          if (quantity > this.items[i].product.amount) {
+            // @ts-ignore
+            quantity = this.items[i].product.amount
+          }
+          let item= {
+            id : this.items[i].id,
+            quantity : quantity,
+            cart:{
+              id: idCustomer
+            },
+            product:{
+              id: idProduct
+            }
+          }
+          this.cartService.updateItemToCart(item).subscribe(value1 => {
+            console.log(value1)
+            this.addItemToCartSuccess()
+            setTimeout(() => {
+              this.ngOnInit()
+            } ,2000)
+          })
+        }
+      }
+      if (!flag){
+        let quantity = 1;
+        let item = {
+          quantity : quantity,
+          cart:{
+            id: idCustomer
+          },
+          product:{
+            id: idProduct
+          }
+        }
+        this.cartService.saveItemToCart(item).subscribe(value1 => {
+          console.log(value1);
+          this.addItemToCartSuccess()
+          setTimeout(() => {
+            this.ngOnInit()
+          } ,2000)
+        })
+      }
+    })
+
+  }
+
+
+  deleteItem(idItem?: number){
+    Swal.fire({
+      title: 'Xóa sản phẩm',
+      text: "Xóa sản phẩm khỏi giỏ hàng",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Đồng ý!',
+      cancelButtonText: 'Hủy',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.cartService.deleteItem(idItem).subscribe(value => {
+
+        }, error => {
+          Swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: 'Xóa thất bại',
+            showConfirmButton: false,
+            timer: 1500
+          })
+        })
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Xóa sản phẩm thành công',
+          showConfirmButton: false,
+          timer: 1500
+        })
+      }
+      this.ngOnInit()
+      // @ts-ignore
+      document.getElementById('cart').style.display = "none"
+
+    })
+
+  }
+
+  displayBrands() {
+    this.productService.findAllBrands().subscribe(value => {
+      this.brands = value;
+    })
+  }
+
+  displayCategories() {
+    this.productService.findAllCategories().subscribe(value => {
+      this.categories = value;
+    })
+  }
+
+  findBrandByLaptop() {
+    this.productService.findBrandByCategory(1).subscribe(value => {
+      this.brandsLaptop = value
+    })
+  }
+
+  findBrandByPhone() {
+    this.productService.findBrandByCategory(1).subscribe(value => {
+      this.brandsPhone = value
+    })
+  }
+
+  findBrandByTv() {
+    this.productService.findBrandByCategory(1).subscribe(value => {
+      this.brandsTv = value
+    })
+  }
+
+  findBrandByCamera() {
+    this.productService.findBrandByCategory(1).subscribe(value => {
+      this.brandsCamera = value
+    })
+  }
+
+  findBrandByFridge() {
+    this.productService.findBrandByCategory(1).subscribe(value => {
+      this.brandsFridge = value
+    })
+  }
+
+  findBrandByTablet() {
+    this.productService.findBrandByCategory(1).subscribe(value => {
+      this.brandsTablet = value
+    })
+  }
+
+  // @ts-ignore
+  findBrandByCategoryId(idCategory : number):Brand[]{
+    let brands:Brand [] = []
+     this.productService.findBrandByCategory(idCategory).subscribe(value => {
+        brands = value
+       return brands;
+     })
+
+
+  }
+
+  addItemToCartSuccess() {
+    Swal.fire({
+      position: 'center',
+      icon: 'success',
+      title: 'Thêm vào giỏ hàng thành công',
+      showConfirmButton: false,
+      timer: 1500
+    })
+  }
+
+  changePrice(money: any) : any {
+    const formatter = new Intl.NumberFormat('it-IT', {
+      style: 'currency',
+      currency: 'VND',
+      // minimumFractionDigits: 2
+    })
+    return formatter.format(money);
+  }
+  set(){
+    alert(4)
+  }
 }

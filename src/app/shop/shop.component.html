@@ -155,8 +155,8 @@
                 <option value="15">Smartwatch</option>
                 <option value="16">Accessories</option>
               </select>
-              <input type="text" placeholder="Enter your search key ...">
-              <button class="li-btn" type="submit"><i class="fa fa-search"></i></button>
+              <input type="text" placeholder="Enter your search key ..." id="searchByName">
+              <button class="li-btn" type="submit"><i class="fa fa-search" (click)="searchByNameProduct()"></i></button>
             </form>
             <!-- Header Middle Searchbox Area End Here -->
             <!-- Begin Header Middle Right Area -->
@@ -389,12 +389,20 @@
               <div id="grid-view" class="tab-pane fade active show" role="tabpanel">
                 <div class="product-area shop-product-area">
                   <div class="row">
+<<<<<<< HEAD
                     <div class="col-lg-4 col-md-4 col-sm-6 mt-40" *ngFor="let p of products">
+=======
+                    <div class="col-lg-4 col-md-4 col-sm-6 mt-40" *ngFor="let p of products" >
+>>>>>>> 877ff33f87f1cdc364035edd25747150aeab62c8
                       <!-- single-product-wrap start -->
-                      <div class="single-product-wrap">
+                      <div class="single-product-wrap" >
                         <div class="product-image">
                           <a href="single-product.html">
+<<<<<<< HEAD
                             <img style="width: 70%; height: 70%" [src]="p.imageURLS" alt= "Error">
+=======
+                            <img [src]="p.imageURLS" alt="Li's Product Image">
+>>>>>>> 877ff33f87f1cdc364035edd25747150aeab62c8
                           </a>
                           <span class="sticker">New</span>
                         </div>
@@ -402,7 +410,11 @@
                           <div class="product_desc_info">
                             <div class="product-review">
                               <h5 class="manufacturer">
+<<<<<<< HEAD
                                 <a href="product-details.html">{{p.product!.category!.name}}</a>
+=======
+                                <a href="product-details.html">{{p!.product!.category}}</a>
+>>>>>>> 877ff33f87f1cdc364035edd25747150aeab62c8
                               </h5>
                               <div class="rating-box">
                                 <ul class="rating">
@@ -416,12 +428,20 @@
                             </div>
                             <h4><a class="product_name" href="single-product.html">{{p.product!.name}}</a></h4>
                             <div class="price-box">
+<<<<<<< HEAD
                               <span class="new-price" >{{p.product!.price}}</span>
+=======
+                              <span class="new-price">{{p.product!.price}}</span>
+>>>>>>> 877ff33f87f1cdc364035edd25747150aeab62c8
                             </div>
                           </div>
                           <div class="add-actions">
                             <ul class="add-actions-link">
+<<<<<<< HEAD
                             <li class="add-cart active"><a style="cursor: pointer" (click)="addToCart(p.product!.id)">Add to cart </a></li>
+=======
+                              <li class="add-cart active"><a href="shopping-cart.html">Add to cart</a></li>
+>>>>>>> 877ff33f87f1cdc364035edd25747150aeab62c8
                               <li><a href="#" title="quick view" class="quick-view-btn" data-toggle="modal" data-target="#exampleModalCenter"><i class="fa fa-eye"></i></a></li>
                               <li><a class="links-details" href="wishlist.html"><i class="fa fa-heart-o"></i></a></li>
                             </ul>

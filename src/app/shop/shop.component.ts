@@ -1,19 +1,28 @@
 import {Component, OnInit} from '@angular/core';
-import {ProductDTO} from "../model/ProductDTO";
+import {HttpClient} from "@angular/common/http";
+import {Observable} from "rxjs";
+import {environment} from "../../environments/environment";
 import {ProductService} from "../service/product.service";
-import {MatTableDataSource} from "@angular/material/table";
-import {Brand} from "../model/Brand";
-import {Category} from "../model/Category";
 import {Product} from "../model/Product";
+// @ts-ignore
+import {ProductDTO} from "../model/productDTO";
 import {CartService} from "../service/cart.service";
+// @ts-ignore
+import {Brand} from "../model/brand";
+// @ts-ignore
+import {Category} from "../model/category";
 import {Item} from "../model/Item";
 import Swal from "sweetalert2";
+
+const API_URL = environment.apiUrl + '/api/products';
+
 
 @Component({
   selector: 'app-shop',
   templateUrl: './shop.component.html',
   styleUrls: ['./shop.component.css']
 })
+
 export class ShopComponent implements OnInit {
   products: ProductDTO [] = []
   brands: Brand [] = []
@@ -32,6 +41,7 @@ export class ShopComponent implements OnInit {
   ) {
   }
 
+
   ngOnInit(): void {
     const script1 = document.createElement('script');
     script1.src = './assets/js/vendor/modernizr-2.8.3.min.js';
@@ -46,6 +56,23 @@ export class ShopComponent implements OnInit {
     this.findBrandByPhone()
     this.findBrandByTablet()
     this.displayItem()
+
+  }
+
+  displayProduct() {
+    this.productService.findAllProducts().subscribe(data => {
+      this.products = data
+    })
+  }
+
+  searchByNameProduct() {
+    // @ts-ignore
+    let name = document.getElementById("searchByName").value
+    this.productService.findProductByName(name).subscribe(value => {
+      this.products = value;
+      console.log(value)
+    })
+
   }
 
   ngAfterContentInit() {
@@ -121,7 +148,8 @@ export class ShopComponent implements OnInit {
       this.products = value;
     })
   }
-  displayItem(){
+
+  displayItem() {
     // @ts-ignore
     let idCustomer = parseInt(localStorage.getItem("idCustomer"))
     this.cartService.findAllItemByCustomerId(idCustomer).subscribe(value => {
@@ -145,13 +173,13 @@ export class ShopComponent implements OnInit {
             // @ts-ignore
             quantity = this.items[i].product.amount
           }
-          let item= {
-            id : this.items[i].id,
-            quantity : quantity,
-            cart:{
+          let item = {
+            id: this.items[i].id,
+            quantity: quantity,
+            cart: {
               id: idCustomer
             },
-            product:{
+            product: {
               id: idProduct
             }
           }
@@ -160,18 +188,18 @@ export class ShopComponent implements OnInit {
             this.addItemToCartSuccess()
             setTimeout(() => {
               this.ngOnInit()
-            } ,2000)
+            }, 2000)
           })
         }
       }
-      if (!flag){
+      if (!flag) {
         let quantity = 1;
         let item = {
-          quantity : quantity,
-          cart:{
+          quantity: quantity,
+          cart: {
             id: idCustomer
           },
-          product:{
+          product: {
             id: idProduct
           }
         }
@@ -180,7 +208,7 @@ export class ShopComponent implements OnInit {
           this.addItemToCartSuccess()
           setTimeout(() => {
             this.ngOnInit()
-          } ,2000)
+          }, 2000)
         })
       }
     })
@@ -188,7 +216,7 @@ export class ShopComponent implements OnInit {
   }
 
 
-  deleteItem(idItem?: number){
+  deleteItem(idItem?: number) {
     Swal.fire({
       title: 'Xóa sản phẩm',
       text: "Xóa sản phẩm khỏi giỏ hàng",
@@ -276,12 +304,12 @@ export class ShopComponent implements OnInit {
   }
 
   // @ts-ignore
-  findBrandByCategoryId(idCategory : number):Brand[]{
-    let brands:Brand [] = []
-     this.productService.findBrandByCategory(idCategory).subscribe(value => {
-        brands = value
-       return brands;
-     })
+  findBrandByCategoryId(idCategory: number): Brand[] {
+    let brands: Brand [] = []
+    this.productService.findBrandByCategory(idCategory).subscribe(value => {
+      brands = value
+      return brands;
+    })
 
 
   }
@@ -296,7 +324,7 @@ export class ShopComponent implements OnInit {
     })
   }
 
-  changePrice(money: any) : any {
+  changePrice(money: any): any {
     const formatter = new Intl.NumberFormat('it-IT', {
       style: 'currency',
       currency: 'VND',
@@ -304,7 +332,8 @@ export class ShopComponent implements OnInit {
     })
     return formatter.format(money);
   }
-  set(){
+
+  set() {
     alert(4)
   }
 }

@@ -21,9 +21,12 @@ import {MatInputModule} from "@angular/material/input";
 
 import { FormCreateProductComponent } from './form-create-product/form-create-product.component';
 import {MatSelectModule} from "@angular/material/select";
+// @ts-ignore
 import {AngularFireStorageModule} from "@angular/fire/compat/storage";
 import {environment} from "../environments/environment";
+// @ts-ignore
 import {AngularFireAuth, AngularFireAuthModule} from "@angular/fire/compat/auth";
+// @ts-ignore
 import {AngularFireModule} from "@angular/fire/compat";
 import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";

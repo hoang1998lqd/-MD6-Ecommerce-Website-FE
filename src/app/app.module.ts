@@ -28,6 +28,7 @@ import {AngularFireModule} from "@angular/fire/compat";
 import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatSortModule} from "@angular/material/sort";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 
 @NgModule({
@@ -44,27 +45,28 @@ import {MatSortModule} from "@angular/material/sort";
     FormCreateProductComponent
 
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    ReactiveFormsModule,
-    FormsModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatIconModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatTableModule,
-    MatSelectModule,
-    AngularFireStorageModule,
-    AngularFireAuthModule,
-    // Khởi tạo vào gọi tới Environment được khai báo biến ở trong environment
-    AngularFireModule.initializeApp(environment.firebaseConfig),
-    MatPaginatorModule,
-    MatSortModule,
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        ReactiveFormsModule,
+        FormsModule,
+        HttpClientModule,
+        BrowserAnimationsModule,
+        MatDialogModule,
+        MatButtonModule,
+        MatIconModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatTableModule,
+        MatSelectModule,
+        AngularFireStorageModule,
+        AngularFireAuthModule,
+        // Khởi tạo vào gọi tới Environment được khai báo biến ở trong environment
+        AngularFireModule.initializeApp(environment.firebaseConfig),
+        MatPaginatorModule,
+        MatSortModule,
+        MatCheckboxModule,
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

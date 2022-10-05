@@ -174,7 +174,7 @@
                 <li class="hm-minicart">
                   <div class="hm-minicart-trigger" >
                     <span class="item-icon"></span>
-                    <span class="item-text">£80.00
+                    <span class="item-text">
                                                     <span class="cart-item-count">{{items.length}}</span>
                                                 </span>
                   </div>
@@ -183,24 +183,24 @@
                     <ul class="minicart-product-list" *ngFor="let item of items">
                       <li>
                         <a href="single-product.html" class="minicart-product-image">
-                          <img src="assets/images/product/small-size/5.jpg" alt="cart products">
+                          <img [src]="findImageURLFirst(item.product!.id)" alt="cart products">
                         </a>
                         <div class="minicart-product-details">
                           <h6><a href="single-product.html">{{item.product!.name}}</a></h6>
-                          <span>{{item.product!.price}} x{{item.quantity}}</span>
+                          <span>{{changePrice(item.product!.price)}} x {{item.quantity}}</span>
                         </div>
                         <button class="close" title="Remove">
                           <i class="fa fa-close" (click)="deleteItem(item!.id)"></i>
                         </button>
                       </li>
                     </ul>
-                    <p class="minicart-total">SUBTOTAL: <span>£80.00</span></p>
+                    <p class="minicart-total">Tổng tiền: <span>{{changePrice(total)}}</span></p>
                     <div class="minicart-button">
                       <a routerLink="/shopping-cart" class="li-button li-button-fullwidth li-button-dark">
-                        <span>View Full Cart</span>
+                        <span>Xem giỏ hàng</span>
                       </a>
                       <a href="checkout.html" class="li-button li-button-fullwidth">
-                        <span>Checkout</span>
+                        <span>Thanh toán</span>
                       </a>
                     </div>
                   </div>
@@ -331,8 +331,8 @@
     <div class="container">
       <div class="breadcrumb-content">
         <ul>
-          <li><a href="index.html">Home</a></li>
-          <li class="active">Shopping Cart</li>
+          <li><a href="index.html">Trang chủ</a></li>
+          <li class="active">Giỏ hàng</li>
         </ul>
       </div>
     </div>
@@ -348,29 +348,32 @@
               <table class="table">
                 <thead>
                 <tr>
-                  <th class="li-product-remove">remove</th>
-                  <th class="li-product-thumbnail">images</th>
-                  <th class="cart-product-name">Product</th>
-                  <th class="li-product-price">Unit Price</th>
-                  <th class="li-product-quantity">Quantity</th>
-                  <th class="li-product-subtotal">Total</th>
+                  <th class="li-product-remove">Lựa chọn</th>
+                  <th class="li-product-remove">Xóa</th>
+                  <th class="li-product-thumbnail">Hình ảnh</th>
+                  <th class="cart-product-name">Tên sản phẩm</th>
+                  <th class="li-product-price">Đơn giá</th>
+                  <th class="li-product-quantity">Số lượng</th>
+                  <th class="li-product-subtotal">Thành tiền</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr *ngFor="let item of items">
+                  <td><section class="example-section">
+                    <mat-checkbox class="example-margin" (click)="selectItem(item.id)"></mat-checkbox>
+                  </section></td>
                   <td class="li-product-remove"><a style="cursor: pointer" (click)="deleteItem(item!.id)" ><i class="fa fa-times" ></i></a></td>
                   <td class="li-product-thumbnail" style="width: 300px"><a  href="#"><img style="width: 50%; height: 50% " [src]="findImageURLFirst(item.product!.id)" alt="Li's Product Image"></a></td>
                   <td class="li-product-name"><a href="#">{{item.product!.name}}</a></td>
                   <td class="li-product-price"><span class="amount">{{changePrice(item.product!.price)}}</span></td>
                   <td class="quantity">
-                    <label>Quantity</label>
                     <div class="cart-plus-minus">
-                      <input class="cart-plus-minus-box" value="{{item.quantity}}" type="text">
+                      <input class="cart-plus-minus-box" value="{{item.quantity}}" id="{{''+item.product!.id}}" type="text">
                       <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
                       <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
                     </div>
                   </td>
-                  <td class="product-subtotal"><span class="amount">$70.00</span></td>
+                  <td class="product-subtotal"><span class="amount">{{changePrice(getTotalItem(item.id))}}</span></td>
                 </tr>
                 </tbody>
               </table>
@@ -379,11 +382,11 @@
               <div class="col-12">
                 <div class="coupon-all">
                   <div class="coupon">
-                    <input id="coupon_code" class="input-text" name="coupon_code" value="" placeholder="Coupon code" type="text">
-                    <input class="button" name="apply_coupon" value="Apply coupon" type="submit">
+                    <input id="coupon_code" class="input-text" name="coupon_code" value="" placeholder="Nhập mã" type="text">
+                    <input class="button" name="apply_coupon" value="Áp mã giảm giá" type="submit">
                   </div>
                   <div class="coupon2">
-                    <input class="button" name="update_cart" value="Update cart" type="submit" (click)="updateQuantityItem()">
+                    <input class="button" name="update_cart" value="Cập nhật giỏ hàng" type="submit" (click)="updateQuantityItem()">
                   </div>
                 </div>
               </div>
@@ -391,12 +394,14 @@
             <div class="row">
               <div class="col-md-5 ml-auto">
                 <div class="cart-page-total">
-                  <h2>Cart totals</h2>
+                  <h2>Thông tin đơn hàng</h2>
                   <ul>
-                    <li>Subtotal <span>$130.00</span></li>
-                    <li>Total <span>$130.00</span></li>
+                    <li>Tổng tiền <span>{{changePrice(subtotal)}}</span></li>
+                    <li>Giảm giá <span>{{discountItem}}%</span></li>
+                    <li>Mã giảm giá <span>0%</span></li>
+                    <li>Thành tiền <span>{{changePrice(total)}}</span></li>
                   </ul>
-                  <a href="#">Proceed to checkout</a>
+                  <a href="#"style="margin-left: 340px">Tiến hành thanh toán</a>
                 </div>
               </div>
             </div>

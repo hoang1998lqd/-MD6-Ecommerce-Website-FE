@@ -19,6 +19,7 @@ export class ShopComponent implements OnInit {
   brands: Brand [] = []
   categories: Category [] = []
   roles: any[] = []
+  total:number = 0;
   brandsLaptop: Brand [] = []
   brandsPhone: Brand [] = []
   brandsTv: Brand [] = []
@@ -27,8 +28,6 @@ export class ShopComponent implements OnInit {
   brandsTablet: Brand [] = []
   items: Item [] = []
   listProduct: ProductDTO [] = []
-  // @ts-ignore
-  idCustomerCurrent!: number
   constructor(private productService: ProductService,
               private cartService: CartService
   ) {
@@ -142,6 +141,10 @@ export class ShopComponent implements OnInit {
     let idCustomer = parseInt(localStorage.getItem("idCustomer"))
     this.cartService.findAllItemByCustomerId(idCustomer).subscribe(value => {
       this.items = value;
+      for (let i = 0; i < value.length; i++) {
+        // @ts-ignore
+        this.total += value[i].quantity * value[i].product.price
+      }
     })
   }
 
@@ -176,7 +179,7 @@ export class ShopComponent implements OnInit {
             console.log(value1)
             this.addItemToCartSuccess()
             setTimeout(() => {
-              this.ngOnInit()
+              this.displayItem()
             } ,2000)
           })
         }
@@ -196,7 +199,7 @@ export class ShopComponent implements OnInit {
           console.log(value1);
           this.addItemToCartSuccess()
           setTimeout(() => {
-            this.ngOnInit()
+            this.displayItem()
           } ,2000)
         })
       }
@@ -308,12 +311,20 @@ export class ShopComponent implements OnInit {
 
 
   addItemToCartSuccess() {
-    Swal.fire({
-      position: 'center',
-      icon: 'success',
-      title: 'Thêm vào giỏ hàng thành công',
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
       showConfirmButton: false,
-      timer: 1500
+      timer: 1500,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer)
+        toast.addEventListener('mouseleave', Swal.resumeTimer)
+      }
+    })
+    Toast.fire({
+      icon: 'success',
+      title: 'Thêm vào giỏ hàng thành công'
     })
   }
 

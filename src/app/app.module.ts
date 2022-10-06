@@ -28,6 +28,7 @@ import {AngularFireModule} from "@angular/fire/compat";
 import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatSortModule} from "@angular/material/sort";
+import { FormCreateVoucherComponent } from './form-create-voucher/form-create-voucher.component';
 
 
 @NgModule({
@@ -41,7 +42,8 @@ import {MatSortModule} from "@angular/material/sort";
     PageNotFoundComponent,
     AdminComponent,
     AdminTableComponent,
-    FormCreateProductComponent
+    FormCreateProductComponent,
+    FormCreateVoucherComponent
 
   ],
   imports: [

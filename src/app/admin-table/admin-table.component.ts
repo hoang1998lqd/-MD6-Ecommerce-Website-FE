@@ -113,6 +113,10 @@ export class AdminTableComponent implements OnInit, AfterContentChecked , AfterV
       }
     });
   }
+openModal(){
+
+}
+
 
   displayProducts() {
     // @ts-ignore
@@ -172,6 +176,7 @@ export class AdminTableComponent implements OnInit, AfterContentChecked , AfterV
     })
 
   }
+
 
   getProductUpdate(id: number){
     this.productService.getProductById(id).subscribe(value => {

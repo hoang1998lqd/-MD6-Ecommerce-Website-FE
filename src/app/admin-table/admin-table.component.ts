@@ -170,7 +170,6 @@ export class AdminTableComponent implements OnInit, AfterContentChecked , AfterV
         )
       }
     })
-
   }
 
   getProductUpdate(id: number){

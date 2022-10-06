@@ -89,11 +89,9 @@ export class FormCreateProductComponent implements OnInit, AfterContentChecked {
       this.productForm.controls['color'].setValue(this.editData.color)
       this.productForm.controls['description'].setValue(this.editData.description)
       this.productForm.controls['discount'].setValue(this.editData.discount)
-
       this.idBrandUpdate = this.editData.brand.id;
       this.idCategoryUpdate = this.editData.category.id;
       this.idProductUpdate = this.editData.id;
-
     }
   }
   ngAfterContentChecked(){

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ProductDTO} from "../model/ProductDTO";
 import {ProductService} from "../service/product.service";
 import {Brand} from "../model/Brand";
@@ -7,6 +7,7 @@ import {Item} from "../model/Item";
 import Swal from "sweetalert2";
 import {CategoryBrandService} from "../service/category-brand.service";
 import {CategoryBrand} from "../model/CategoryBrand";
+import {MatPaginator, PageEvent} from "@angular/material/paginator";
 
 
 @Component({
@@ -16,7 +17,6 @@ import {CategoryBrand} from "../model/CategoryBrand";
 })
 export class ShopComponent implements OnInit {
   // Phân trang
-  POSTS: any;
   page: number = 1;
   count: number = 0;
   tableSize: number = 3;
@@ -314,4 +314,8 @@ export class ShopComponent implements OnInit {
   }
   //Phân trang sản phẩm
 
+  //Load lại trang
+  loadPage(){
+    window.location.reload()
+  }
 }

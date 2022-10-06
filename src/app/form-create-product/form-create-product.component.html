@@ -4,7 +4,7 @@
  <form [formGroup]="productForm">
    <mat-form-field appearance="outline" >
      <mat-label>Name</mat-label>
-     <input matInput placeholder="Placeholder" formControlName="name">
+     <input matInput placeholder="Placeholder" formControlName="name" id="name">
      <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
    </mat-form-field>
    <mat-form-field appearance="outline" >
@@ -15,7 +15,7 @@
 
    <mat-form-field appearance="outline" >
      <mat-label>Amount</mat-label>
-     <input matInput placeholder="Placeholder" formControlName="amount">
+     <input  matInput placeholder="Placeholder" formControlName="amount" id="amount">
      <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
    </mat-form-field>
 
@@ -45,7 +45,7 @@
    </mat-form-field>
    <mat-form-field appearance="outline">
      <mat-label>Brand</mat-label>
-     <mat-select formControlName="category">
+     <mat-select formControlName="brand">
        <mat-option *ngFor="let brand of listBrandByCategory" [value]="brand.id">{{brand.name}}</mat-option>
      </mat-select>
    </mat-form-field>
@@ -54,6 +54,7 @@
             (change)="showPreview($event)" name="image" autocomplete="off" class="custom-file-input"
             id = "inputGroupFile01">
      <label for="inputGroupFile01" class="custom-file-label">Choose File</label>
+     <div style="color: red; font-size: 14px">(*)Up to 4 photos can only be selected for the product</div>
 
    </div>
    <img *ngFor="let url of listURL" src="{{url}}" width="20%" height="20%" style="margin-left: 20px" alt="Error">
@@ -64,5 +65,5 @@
 
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Cancel</button>
-  <button mat-button [mat-dialog-close]="true" mat-stroked-button color="primary" cdkFocusInitial>Create</button>
+  <button mat-button [mat-dialog-close]="true" mat-stroked-button color="primary" (click)="saveProduct()" cdkFocusInitial>{{actionBtn}}</button>
 </mat-dialog-actions>

@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+
 import { AppRoutingModule, RoutingComponent } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {HttpClientModule} from "@angular/common/http";
@@ -30,6 +32,11 @@ import {AngularFireModule} from "@angular/fire/compat";
 import {BrowserModule} from "@angular/platform-browser";
 import { SingleProductComponent } from './single-product/single-product.component';
 import { CheckoutComponent } from './checkout/checkout.component';
+import {MatTableModule} from "@angular/material/table";
+import {MatPaginatorModule} from "@angular/material/paginator";
+import {MatSortModule} from "@angular/material/sort";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {NgxPaginationModule} from "ngx-pagination";
 
 
 @NgModule({
@@ -60,11 +67,16 @@ import { CheckoutComponent } from './checkout/checkout.component';
         MatIconModule,
         MatInputModule,
         MatFormFieldModule,
+        MatTableModule,
         MatSelectModule,
         AngularFireStorageModule,
         AngularFireAuthModule,
         // Khởi tạo vào gọi tới Environment được khai báo biến ở trong environment
         AngularFireModule.initializeApp(environment.firebaseConfig),
+        MatPaginatorModule,
+        MatSortModule,
+        MatCheckboxModule,
+        NgxPaginationModule,
     ],
   providers: [],
   bootstrap: [AppComponent]

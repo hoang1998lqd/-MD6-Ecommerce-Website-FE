@@ -29,6 +29,7 @@ import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatSortModule} from "@angular/material/sort";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {NgxPaginationModule} from "ngx-pagination";
 
 
 @NgModule({
@@ -66,6 +67,7 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
         MatPaginatorModule,
         MatSortModule,
         MatCheckboxModule,
+        NgxPaginationModule,
     ],
   providers: [],
   bootstrap: [AppComponent]

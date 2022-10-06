@@ -15,6 +15,14 @@ import {CategoryBrand} from "../model/CategoryBrand";
   styleUrls: ['./shop.component.css']
 })
 export class ShopComponent implements OnInit {
+  // Phân trang
+  POSTS: any;
+  page: number = 1;
+  count: number = 0;
+  tableSize: number = 3;
+  tableSizes: any = [6, 9, 12];
+  // Phân trang
+
   products: ProductDTO [] = []
   brands: Brand [] = []
   total: number = 0;
@@ -24,7 +32,7 @@ export class ShopComponent implements OnInit {
 
   constructor(private productService: ProductService,
               private cartService: CartService,
-              private categoryBrandService: CategoryBrandService
+              private categoryBrandService: CategoryBrandService,
   ) {
   }
 
@@ -32,7 +40,6 @@ export class ShopComponent implements OnInit {
     const script1 = document.createElement('script');
     script1.src = './assets/js/vendor/modernizr-2.8.3.min.js';
     document.body.appendChild(script1);
-    this.displayProducts()
     this.displayItem()
     this.findProductByCustomerId()
     this.displayBrandByCategory()
@@ -109,15 +116,6 @@ export class ShopComponent implements OnInit {
     return this.categoryBrandService.findAllCategoryAndBrand().subscribe(value => {
       this.categoryBrands = value
       console.log(value)
-    })
-  }
-
-  // Product của người bán hàng
-  displayProducts() {
-    // @ts-ignore
-    let idCustomer = parseInt(localStorage.getItem("idCustomer"))
-    this.productService.findAllProductByCustomerId(idCustomer).subscribe(value => {
-      this.products = value
     })
   }
 
@@ -303,5 +301,17 @@ export class ShopComponent implements OnInit {
       this.listProduct = value
     })
   }
+
+  //Phân trang sản phẩm
+  onTableDataChange(event: any) {
+    this.page = event;
+    this.findProductByCustomerId();
+  }
+  onTableSizeChange(event: any): void {
+    this.tableSize = event.target.value;
+    this.page = 1;
+    this.findProductByCustomerId();
+  }
+  //Phân trang sản phẩm
 
 }

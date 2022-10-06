@@ -5,7 +5,8 @@ import {FormBuilder, FormGroup} from "@angular/forms";
 import {ProductService} from "../service/product.service";
 import {MatDialog} from "@angular/material/dialog";
 import Swal from "sweetalert2";
-import {AngularFireStorage, AngularFireStorageReference, AngularFireUploadTask} from "@angular/fire/compat/storage";
+// @ts-ignore
+import {AngularFireStorage, AngularFireStorageReference} from "@angular/fire/compat/storage";
 import {finalize, Observable} from "rxjs";
 
 @Component({
@@ -171,7 +172,7 @@ export class FormCreateProductComponent implements OnInit, AfterContentChecked {
         const fileRef = this.storage.ref(filePath);
         this.storage.upload(filePath, selectedImage).snapshotChanges().pipe(
           finalize(() =>{
-            fileRef.getDownloadURL().subscribe(url => {
+            fileRef.getDownloadURL().subscribe((url: any) => {
               console.log(url)
               this.listURL.push(url)
 

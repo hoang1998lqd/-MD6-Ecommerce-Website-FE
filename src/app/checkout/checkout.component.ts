@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-shopping-cart',
-  templateUrl: './shopping-cart.component.html',
-  styleUrls: ['./shopping-cart.component.css']
+  selector: 'app-checkout',
+  templateUrl: './checkout.component.html',
+  styleUrls: ['./checkout.component.css']
 })
-export class ShoppingCartComponent implements OnInit {
+export class CheckoutComponent implements OnInit {
 
   constructor() { }
 
@@ -77,7 +77,7 @@ export class ShoppingCartComponent implements OnInit {
     script21.src = './assets/js/scrollUp.min.js';
     document.body.appendChild(script21);
     const script22 = document.createElement('script');
-    script22.src = '/assets/js/main.js';
+    script22.src = './assets/js/main.js';
     document.body.appendChild(script22);
   }
 

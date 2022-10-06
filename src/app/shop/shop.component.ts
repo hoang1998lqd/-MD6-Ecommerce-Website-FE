@@ -1,10 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {ProductDTO} from "../model/ProductDTO";
 import {ProductService} from "../service/product.service";
-import {MatTableDataSource} from "@angular/material/table";
 import {Brand} from "../model/Brand";
 import {Category} from "../model/Category";
-import {Product} from "../model/Product";
 import {CartService} from "../service/cart.service";
 import {Item} from "../model/Item";
 import Swal from "sweetalert2";
@@ -38,7 +36,7 @@ export class ShopComponent implements OnInit {
     const script1 = document.createElement('script');
     script1.src = './assets/js/vendor/modernizr-2.8.3.min.js';
     document.body.appendChild(script1);
-    this.displayProducts()
+    // this.displayProducts()
     this.displayBrands();
     this.displayCategories()
     this.findBrandByFridge()
@@ -118,14 +116,18 @@ export class ShopComponent implements OnInit {
   }
 
   // Product của người bán hàng
-  displayProducts() {
-    // @ts-ignore
-    let idCustomer = parseInt(localStorage.getItem("idCustomer"))
-    this.productService.findAllProductByCustomerId(idCustomer).subscribe(value => {
-      this.products= value
-    })
-  }
+  // displayProducts() {
+  //   // @ts-ignore
+  //   let idCustomer = parseInt(localStorage.getItem("idCustomer"))
+  //   this.productService.findAllProductByCustomerId(idCustomer).subscribe(value => {
+  //     this.products= value
+  //   })
+  // }
 
+  displayProductsByValue(value: ProductDTO []){
+    // @ts-ignore
+    this.listProduct = value
+  }
   //Products của người mua hàng gồm cả người bán hàng nhưng không có sản phẩm của người bán đó
   // Đấy là list Product hiển thị trên trang bán hàng
   findProductByCustomerId(){
@@ -328,4 +330,36 @@ export class ShopComponent implements OnInit {
 
   }
 
+  searchByNameProduct() {
+    let idCustomer = localStorage.getItem("idCustomer")
+    // @ts-ignore
+    let name = document.getElementById("searchByName").value
+    if (name == null){
+        this.findProductByCustomerId()
+    }else {
+      this.productService.findProductByName(idCustomer,name).subscribe(value => {
+        this.displayProductsByValue(value)
+      })
+    }
+  }
+
+  searchByPrice(){
+    let idCustomer = localStorage.getItem("idCustomer")
+    // @ts-ignore
+    let priceMin = document.getElementById("priceMin").value
+    // @ts-ignore
+    let priceMax = document.getElementById("priceMax").value
+    this.productService.findProductByPrice(idCustomer, priceMin, priceMax).subscribe(value => {
+      this.displayProductsByValue(value)
+    })
+  }
+
+  // searchByIdCategory() {
+  //   let idCustomer = localStorage.getItem("idCustomer")
+  //   // @ts-ignore
+  //   let idCategory = document.getElementById("{{category.id}}").value
+  //     this.productService.findProductByCategory(idCustomer, idCategory).subscribe(value => {
+  //       this.displayProductsByValue(value)
+  //     })
+  // }
 }

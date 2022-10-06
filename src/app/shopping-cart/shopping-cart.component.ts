@@ -4,7 +4,7 @@ import {CartService} from "../service/cart.service";
 import {Item} from "../model/Item";
 import Swal from "sweetalert2";
 import {ProductDTO} from "../model/ProductDTO";
-import {coerceNumberProperty} from "@angular/cdk/coercion";
+
 
 @Component({
   selector: 'app-shopping-cart',
@@ -102,7 +102,9 @@ export class ShoppingCartComponent implements OnInit {
     // @ts-ignore
     let idCustomer = parseInt(localStorage.getItem("idCustomer"))
     this.cartService.findAllItemByCustomerId(idCustomer).subscribe(value => {
+      console.log(value)
       this.items = value;
+      this.subtotal = 0;
       for (let i = 0; i < value.length; i++) {
         // @ts-ignore
         this.subtotal += value[i].quantity * value[i].product.price
@@ -143,12 +145,10 @@ export class ShoppingCartComponent implements OnInit {
           timer: 1500
         })
       }
-      this.ngOnInit()
+      this.displayItem()
       // @ts-ignore
       document.getElementById('cart').style.display = "none"
-
     })
-
   }
 
 
@@ -176,7 +176,6 @@ export class ShoppingCartComponent implements OnInit {
 
   // Cập nhật số lượng mua hàng
   updateQuantityItem() {
-
     // @ts-ignore
     let idCustomer = parseInt(localStorage.getItem("idCustomer"))
     this.cartService.findAllItemByCustomerId(idCustomer).subscribe(value => {
@@ -211,11 +210,12 @@ export class ShoppingCartComponent implements OnInit {
                 }
               }
               this.cartService.updateItemToCart(item).subscribe(value1 => {
-                console.log(value1)
                 this.updateQuantityToCartSuccess()
-                setTimeout(() => {
-                  this.displayItem()
-                }, 1700)
+                // this.displayItem()
+                setTimeout(()=>{
+                  window.location.reload()
+                  // this.displayItem()
+                },1700)
               })
             }
           })
@@ -275,7 +275,7 @@ export class ShoppingCartComponent implements OnInit {
 
   // Lấy tổng tiền cần thanh toán khi đặt hàng
   getTotalMoney(subtotal: any) {
-    if (subtotal > 75000000) {
+    if (subtotal > 100000000) {
       this.total = subtotal - subtotal * this.voucherItem / 100 - subtotal * 0.3
       this.discountItem = 30
     } else if (subtotal > 50000000) {

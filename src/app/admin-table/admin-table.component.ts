@@ -1,9 +1,10 @@
 import {AfterContentChecked, AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
 import {ProductService} from "../service/product.service";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Product} from "../model/Product";
-import {Brand} from "../model/Brand";import Swal from 'sweetalert2'
+import {Brand} from "../model/Brand";
+import Swal from 'sweetalert2'
 import {FormCreateProductComponent} from "../form-create-product/form-create-product.component";
 import {ProductDTO} from "../model/ProductDTO";
 import {MatTableDataSource, MatTableModule} from "@angular/material/table";
@@ -11,6 +12,8 @@ import {MatSort, Sort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
 import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {Category} from "../model/Category";
+import {Voucher} from "../model/Voucher";
+import {VoucherService} from "../service/voucher.service";
 
 
 @Component({
@@ -18,29 +21,38 @@ import {Category} from "../model/Category";
   templateUrl: './admin-table.component.html',
   styleUrls: ['./admin-table.component.css']
 })
-export class AdminTableComponent implements OnInit, AfterContentChecked , AfterViewInit{
+export class AdminTableComponent implements OnInit, AfterContentChecked, AfterViewInit {
   listProduct!: MatTableDataSource<ProductDTO>
+  customerCurrentId!: any
+  voucherForm!: FormGroup;
+  idVoucherUpdate!: number
+  vouchers: Voucher [] = []
+
   products: ProductDTO [] = []
   brands: Brand [] = []
   categories: Category [] = []
   productForm!: FormGroup;
-  displayedColumns: string[] = ['stt','name', 'price', 'amount', 'color','image','edit','delete'];
+  displayedColumns: string[] = ['stt', 'name', 'price', 'amount', 'color', 'image', 'edit', 'delete'];
 
   constructor(private productService: ProductService,
+              private voucherService: VoucherService,
               private formGroup: FormBuilder,
-              private dialog: MatDialog ,
-              private _liveAnnouncer: LiveAnnouncer) { }
+              private dialog: MatDialog,
+              private _liveAnnouncer: LiveAnnouncer) {
+  }
 
   ngAfterViewInit(): void {
-        // @ts-ignore
+    // @ts-ignore
     this.listProduct.sort = this.sort
-    }
-  @ViewChild(MatPaginator) paginator!: MatPaginator ;
-  @ViewChild(MatSort) sort!: MatSort ;
+  }
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('empTbSort') empTbSort = new MatSort();
   @ViewChild('empTbSortWithObject') empTbSortWithObject = new MatSort();
 
   ngOnInit(): void {
+
     const script1 = document.createElement('link');
     script1.href = "./assets/admin/vendor/fontawesome-free/css/all.min.css";
     script1.rel = "stylesheet";
@@ -68,6 +80,15 @@ export class AdminTableComponent implements OnInit, AfterContentChecked , AfterV
     this.displayProducts()
     this.displayBrands()
     this.displayCategories()
+    this.displayVoucher()
+    this.voucherForm = this.formGroup.group({
+      id: [''],
+      name: ['', Validators.required],
+      discount: ['', [Validators.required, Validators.min(0), Validators.max(100)]],
+      quantity: ['', [Validators.required, Validators.max(20)]],
+      customer: [''],
+    })
+
     this.productForm = this.formGroup.group({
       id: [''],
       name: [''],
@@ -82,7 +103,8 @@ export class AdminTableComponent implements OnInit, AfterContentChecked , AfterV
       customer: [''],
     })
   }
-  ngAfterContentChecked(){
+
+  ngAfterContentChecked() {
     const script5 = document.createElement('script');
     script5.src = "./assets/admin/vendor/jquery/jquery.min.js";
     document.body.appendChild(script5);
@@ -105,17 +127,21 @@ export class AdminTableComponent implements OnInit, AfterContentChecked , AfterV
     script11.src = "./assets/admin/js/demo/datatables-demo.js";
     document.body.appendChild(script11);
   }
+
   openDialog() {
     const dialogRef = this.dialog.open(FormCreateProductComponent);
     dialogRef.afterClosed().subscribe(result => {
-      if (result === 'Create'){
+      if (result === 'Create') {
         this.displayProducts();
       }
     });
   }
-openModal(){
 
-}
+  openModalVoucher() {
+    // @ts-ignore
+    document.getElementById("createVoucher").style.display = "block"
+
+  }
 
 
   displayProducts() {
@@ -131,10 +157,53 @@ openModal(){
 
     })
   }
+
+  createVoucher() {
+    let voucher = {
+      id: this.voucherForm.value.id,
+      name: this.voucherForm.value.name,
+      discount: this.voucherForm.value.discount,
+      quantity: this.voucherForm.value.quantity,
+    }
+    this.voucherService.createVoucher(voucher).subscribe(value => {
+        this.createVoucher()
+        // @ts-ignore
+        document.getElementById("myModal").style.display = "none"
+        this.displayVoucher()
+        console.log(value)
+      }, error => {
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: 'Tạo mới thất bại',
+          showConfirmButton: false,
+          timer: 1500
+        })
+      }
+    )
+    // @ts-ignore
+    document.getElementById("rest").click()
+  }
+
+  displayVoucher() {
+    this.voucherService.findAllByStore_Id().subscribe(value => {
+      this.vouchers = value;
+    })
+
+  }
+
   displayBrands() {
     this.productService.findAllBrands().subscribe(value => {
       this.brands = value;
     })
+  }
+
+  displayFormCreate() {
+    let modal = document.getElementById("myModal");
+    // @ts-ignore
+    modal.style.display = "block";
+    // @ts-ignore
+    this.voucherForm()
   }
 
   displayCategories() {
@@ -143,7 +212,39 @@ openModal(){
     })
   }
 
-  deleteProduct(id: number){
+  closeFromCreate() {
+    // @ts-ignore
+    document.getElementById("createVoucher").style.display = "none"
+  }
+
+  updateVoucher() {
+    // @ts-ignore
+    let id = parseInt(localStorage.getItem("idCustomer"))
+    let voucher = {
+      id: this.idVoucherUpdate,
+      name: this.voucherForm.value.name,
+      discount: this.voucherForm.value.discount,
+      quantity: this.voucherForm.value.quantity,
+      customer: {
+        id: id
+      }
+    }
+    this.voucherService.updateVoucher(voucher).subscribe(value => {
+      console.log(value)
+      this.voucherForm.reset()
+    }, error => {
+      Swal.fire({
+        position: 'center',
+        icon: 'error',
+        title: 'Cập nhật thất bại',
+        showConfirmButton: false,
+        timer: 1500
+      })
+
+    })
+  }
+
+  deleteProduct(id: number) {
     // this.productService.deleteProduct(id)
     Swal.fire({
       title: 'Bạn có chắc chắn muốn xóa?',
@@ -178,9 +279,9 @@ openModal(){
   }
 
 
-  getProductUpdate(id: number){
+  getProductUpdate(id: number) {
     this.productService.getProductById(id).subscribe(value => {
-      this.dialog.open(FormCreateProductComponent,{width : '30%', data : value})
+      this.dialog.open(FormCreateProductComponent, {width: '30%', data: value})
     })
   }
 

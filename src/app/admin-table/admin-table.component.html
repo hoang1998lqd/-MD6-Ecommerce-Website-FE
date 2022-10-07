@@ -175,7 +175,7 @@
               </form>
             </div>
           </li>
-          <button mat-button (click)="displayFormCreate()">Create New Voucher</button>
+          <button mat-button (click)="openModalVoucher()">Create New Voucher</button>
 
           <button mat-button (click)="openDialog()">Create New Product</button>
           <!-- Nav Item - Alerts -->
@@ -494,3 +494,53 @@
 <!--    </div>-->
 <!--  </div>-->
 <!--</div>-->
+
+<!-- The Modal Create And Update -->
+<div class="modal" id="createVoucher">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content"  id="detailModal">
+      <!-- Modal Header -->
+      <div class="modal-header" >
+        <h4 id="titleFrom" class="modal-title"></h4>
+        <button type="button" class="btn-close" (click)="closeFromCreate()"></button>
+      </div>
+      <!--       Modal body-->
+      <form [formGroup]="voucherForm" enctype="multipart/form-data">
+        <table class="modal-body">
+          <tr>
+            <td>
+              Name
+              <input id="name" formControlName="name" type="text">
+
+            </td>
+
+          </tr>
+          <tr>
+            <td>
+              Discount
+
+              <input id="discount" formControlName="discount" type="text">
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Quantity
+              <input id="quantity"  formControlName="quantity" type="text">
+
+            </td>
+          </tr>
+          <tr>
+            <td id="messageCreate">
+            </td>
+          </tr>
+        </table>
+        <!-- Modal footer -->
+        <div align="center" class="modal-footer">
+          <button type="button" (click)="createVoucher()"  id="buttonCreate" class="btn btn-danger">Add new voucher</button>
+          <button type="reset" hidden id="rest" class="btn btn-danger">Add new voucher</button>
+          <button type="button" (click)="updateVoucher()"  id="buttonUpdate" class="btn btn-danger">Update Voucher</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

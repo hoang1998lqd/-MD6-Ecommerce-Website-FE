@@ -451,6 +451,14 @@
                   <div class="col-lg-6 col-md-6">
                     <ul class="pagination-box pt-xs-20 pb-xs-15">
                       <div class="d-flex justify-content-center">
+                        <mat-form-field appearance="fill">
+                          <mat-label>Lựa chọn</mat-label>
+                          <mat-select>
+                            <mat-option *ngFor="let food of tableSizes" [value]="food" (click)="changeTableSize(food)" >
+                              {{food}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
                         <pagination-controls
                           previousLabel="Trước"
                           nextLabel="Sau"

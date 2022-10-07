@@ -1,13 +1,26 @@
 import { Component, OnInit } from '@angular/core';
-
+import Swal from 'sweetalert2';
+import {Customer} from "../model/Customer";
+import {Role} from "../model/Role";
+import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {CustomerService} from "../service/customer.service";
+import {data, error} from "jquery";
+import {first} from "rxjs";
+import {Router} from "@angular/router";
 @Component({
   selector: 'app-login-register',
   templateUrl: './login-register.component.html',
   styleUrls: ['./login-register.component.css']
 })
 export class LoginRegisterComponent implements OnInit {
+  customer!: Customer
+  role!: Role
+  customerForm!: FormGroup
+  loginForm!: FormGroup
 
-  constructor() { }
+  constructor(private customerService: CustomerService,
+              private formGroup: FormBuilder,
+              private router: Router) { }
 
   ngOnInit(): void {
     const script = document.createElement('script');
@@ -16,9 +29,140 @@ export class LoginRegisterComponent implements OnInit {
     const script1 = document.createElement('script');
     script1.src = './assets/js/vendor/modernizr-2.8.3.min.js';
     document.body.appendChild(script1);
+
+    this.customerForm = this.formGroup.group({
+      id: [''],
+      name: [''],
+      emailAddress: [''],
+      password: [''],
+      phoneNumber: [''],
+      address: [''],
+      image: [''],
+      status: [''],
+      role: [''],
+    });
+
+    this.loginForm = this.formGroup.group({
+      usename: [''],
+      password: [''],
+    })
   }
 
-  ngAfterContentInit(){
+  createCustomer(){
+    // @ts-ignore
+    const repassword = document.getElementById("repassword").value
+    let customer = {
+      id: this.customerForm.value.id,
+      name: this.customerForm.value.name,
+      emailAddress: this.customerForm.value.emailAddress,
+      password: this.customerForm.value.password,
+      phoneNumber: this.customerForm.value.phoneNumber,
+      address: this.customerForm.value.address,
+      image: this.customerForm.value.image,
+      status: 1,
+      role:[
+        {
+          id: 3
+        }
+      ]
+    }
+    if (repassword == this.customerForm.value.password){
+      this.customerService.createCustomer(customer).subscribe(value => {
+          this.createSuccess()
+        }, error1 => {
+          this.createFail()
+        }
+      )
+    }else {
+      Swal.fire({
+        position: 'center',
+        icon: 'error',
+        title: 'Mật khẩu nhập lại không đúng',
+        showConfirmButton: false,
+        timer: 1500
+      })
+    }
+
+  }
+
+  createSuccess() {
+    Swal.fire({
+      position: 'center',
+      icon: 'success',
+      title: 'Tạo mới thành công',
+      showConfirmButton: false,
+      timer: 1500
+    })
+  }
+
+  loginSuccess() {
+    Swal.fire({
+      position: 'center',
+      icon: 'success',
+      title: 'Đăng nhập thành công',
+      showConfirmButton: false,
+      timer: 1500
+    })
+    return true;
+  }
+
+  createFail(){
+    Swal.fire({
+      position: 'center',
+      icon: 'error',
+      title: 'Tạo mới thất bại',
+      showConfirmButton: false,
+      timer: 1500
+    })
+  }
+
+  loginFail(){
+    Swal.fire({
+      position: 'center',
+      icon: 'error',
+      title: 'Đăng nhập thất bại',
+      showConfirmButton: false,
+      timer: 1500
+    })
+  }
+
+  loginCustomer(){
+    console.log(this.loginForm.value.usename)
+    console.log(this.loginForm.value.password)
+
+    this.customerService.loginCustomer(this.loginForm.value.usename, this.loginForm.value.password)
+      .pipe(first())
+      .subscribe(value => {
+        console.log(value)
+        // @ts-ignore
+        localStorage.setItem("username", value.username);
+        // @ts-ignore
+        localStorage.setItem("roles",value.roles[0].authority);
+        // @ts-ignore
+        localStorage.setItem("idCustomer",value.id);
+        // @ts-ignore
+        localStorage.setItem("token",value.token);
+        if (this.loginSuccess()){
+          // @ts-ignore
+          this.directCustomer(value.roles[0].authority)
+        }
+      }, error =>{
+        this.loginFail()
+      })
+  }
+  directCustomer(roles?: string){
+    if (roles == "admin"){
+     this.router.navigate(['admin'])
+    }
+    if (roles == "seller"){
+      this.router.navigate(['admin'])
+    }
+    if (roles == "customer"){
+      this.router.navigate(['admin'])
+    }
+  }
+
+  ngAfterContentChecked(){
     const script2 = document.createElement('script');
     script2.src = './assets/js/vendor/jquery-1.12.4.min.js';
     document.body.appendChild(script2);

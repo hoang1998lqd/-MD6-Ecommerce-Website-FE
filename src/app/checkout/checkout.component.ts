@@ -1,23 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import {Router} from "@angular/router";
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  selector: 'app-checkout',
+  templateUrl: './checkout.component.html',
+  styleUrls: ['./checkout.component.css']
 })
-export class HomeComponent implements OnInit {
+export class CheckoutComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  constructor() { }
 
   ngOnInit(): void {
     const script1 = document.createElement('script');
     script1.src = './assets/js/vendor/modernizr-2.8.3.min.js';
     document.body.appendChild(script1);
   }
-  directAdmin(){
-    this.router.navigate(['admin']);
-  }
+
   ngAfterContentChecked(){
     const script2 = document.createElement('script');
     script2.src = './assets/js/vendor/jquery-1.12.4.min.js';
@@ -83,5 +80,6 @@ export class HomeComponent implements OnInit {
     script22.src = './assets/js/main.js';
     document.body.appendChild(script22);
   }
+
 
 }

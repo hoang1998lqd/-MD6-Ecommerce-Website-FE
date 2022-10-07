@@ -30,7 +30,7 @@ export class AdminComponent implements OnInit {
 
   }
 
-  ngAfterContentInit(){
+  ngAfterContentChecked(){
     const script5 = document.createElement('script');
     script5.src = "./assets/admin/vendor/jquery/jquery.min.js";
     document.body.appendChild(script5);

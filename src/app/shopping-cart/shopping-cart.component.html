@@ -367,6 +367,7 @@
                   <td class="li-product-name"><a href="#">{{item.product!.name}}</a></td>
                   <td class="li-product-price"><span class="amount">{{changePrice(item.product!.price)}}</span></td>
                   <td class="quantity">
+                    <label>Quantity</label>
                     <div class="cart-plus-minus">
                       <input class="cart-plus-minus-box" value="{{item.quantity}}" id="{{''+item.product!.id}}" type="text">
                       <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
@@ -401,7 +402,7 @@
                     <li>Mã giảm giá <span>0%</span></li>
                     <li>Thành tiền <span>{{changePrice(total)}}</span></li>
                   </ul>
-                  <a href="#"style="margin-left: 340px">Tiến hành thanh toán</a>
+                  <a style="margin-left: 340px" routerLink="/checkout">Tiến hành thanh toán</a>
                 </div>
               </div>
             </div>

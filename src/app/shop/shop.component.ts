@@ -43,7 +43,7 @@ export class ShopComponent implements OnInit {
     this.displayBrandByCategory()
   }
 
-  ngAfterContentInit() {
+  ngAfterContentChecked(){
     const script2 = document.createElement('script');
     script2.src = './assets/js/vendor/jquery-1.12.4.min.js';
     document.body.appendChild(script2);

@@ -1,10 +1,11 @@
 import {Role} from "./Role";
 
-export interface Customer {
-  id?: number
+export interface CustomerToken{
+  id?: string
   name?: string
   emailAddress?: string
   password?: string
+  accessToken?: string;
   phoneNumber?: string
   address?: string
   image?: string

@@ -21,10 +21,17 @@ import {MatInputModule} from "@angular/material/input";
 
 import { FormCreateProductComponent } from './form-create-product/form-create-product.component';
 import {MatSelectModule} from "@angular/material/select";
+// @ts-ignore
 import {AngularFireStorageModule} from "@angular/fire/compat/storage";
 import {environment} from "../environments/environment";
+// @ts-ignore
 import {AngularFireAuth, AngularFireAuthModule} from "@angular/fire/compat/auth";
+// import {AngularFireAuth} from "@angular/fi"
+// @ts-ignore
 import {AngularFireModule} from "@angular/fire/compat";
+import {BrowserModule} from "@angular/platform-browser";
+import { SingleProductComponent } from './single-product/single-product.component';
+import { CheckoutComponent } from './checkout/checkout.component';
 import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatSortModule} from "@angular/material/sort";
@@ -43,7 +50,9 @@ import {NgxPaginationModule} from "ngx-pagination";
     PageNotFoundComponent,
     AdminComponent,
     AdminTableComponent,
-    FormCreateProductComponent
+    FormCreateProductComponent,
+    SingleProductComponent,
+    CheckoutComponent
 
   ],
     imports: [

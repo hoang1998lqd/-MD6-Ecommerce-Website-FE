@@ -27,12 +27,13 @@ export class AdminTableComponent implements OnInit, AfterContentChecked, AfterVi
   voucherForm!: FormGroup;
   idVoucherUpdate!: number
   vouchers: Voucher [] = []
-
+  listVoucher!: MatTableDataSource<Voucher>
   products: ProductDTO [] = []
   brands: Brand [] = []
   categories: Category [] = []
   productForm!: FormGroup;
   displayedColumns: string[] = ['stt', 'name', 'price', 'amount', 'color', 'image', 'edit', 'delete'];
+  displayedColumns2: string[] = ['stt', 'name', 'discount', 'amount'];
 
   constructor(private productService: ProductService,
               private voucherService: VoucherService,
@@ -157,6 +158,19 @@ export class AdminTableComponent implements OnInit, AfterContentChecked, AfterVi
 
     })
   }
+  displayVoucher() {
+    // @ts-ignore
+    let idCustomer = parseInt(localStorage.getItem("idCustomer"))
+
+    this.voucherService.findAllByStore_Id(idCustomer).subscribe(value => {
+      // @ts-ignore
+      this.listVoucher = new MatTableDataSource(value)
+      // @ts-ignore
+      this.listVoucher.paginator = this.paginator
+      this.listVoucher.connect()
+    })
+
+  }
 
   createVoucher() {
     let voucher = {
@@ -185,12 +199,7 @@ export class AdminTableComponent implements OnInit, AfterContentChecked, AfterVi
     document.getElementById("rest").click()
   }
 
-  displayVoucher() {
-    this.voucherService.findAllByStore_Id().subscribe(value => {
-      this.vouchers = value;
-    })
 
-  }
 
   displayBrands() {
     this.productService.findAllBrands().subscribe(value => {

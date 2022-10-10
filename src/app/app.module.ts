@@ -33,7 +33,7 @@ import {AngularFireModule} from "@angular/fire/compat";
 import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatSortModule} from "@angular/material/sort";
-
+import {OrderComponent} from "./order/order.component";
 
 @NgModule({
   declarations: [
@@ -47,8 +47,7 @@ import {MatSortModule} from "@angular/material/sort";
     AdminComponent,
     AdminTableComponent,
     FormCreateProductComponent,
-
-
+    OrderComponent,
 
   ],
   imports: [
@@ -71,6 +70,7 @@ import {MatSortModule} from "@angular/material/sort";
     AngularFireModule.initializeApp(environment.firebaseConfig),
     MatPaginatorModule,
     MatSortModule,
+
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -91,29 +91,4 @@ export class ProductService {
   }
 
 
-// =======
-//   updateImage(img ?: ImageURL): Observable<ImageURL> {
-//     return this.httpClient.put<ImageURL>("http://localhost:8081/api/products/update-img", img)
-//   }
-//
-//   getIdImageUpdate(id ?: number): Observable<any> {
-//     return this.httpClient.get<any>("http://localhost:8081/api/products/product-update/" + id)
-//   }
-//
-//   findAllProductByCustomerId(id ?: number): Observable<ProductDTO[]> {
-//     return this.httpClient.get<ProductDTO[]>("http://localhost:8081/api/products/customer/" + id)
-//   }
-//
-//   findProductByName(name: string): Observable<ProductDTO[]> {
-//     return this.httpClient.get<ProductDTO[]>("http://localhost:8081/api/products/find-name-products?" + name);
-//   }
-//
-//   findProductByCategory(id: number): Observable<ProductDTO[]> {
-//     return this.httpClient.get<ProductDTO[]>("http://localhost:8081/api/products/find-by-id/" + id)
-//   }
-//
-//   findProductByPrice(priceMin: number, priceMax: number): Observable<ProductDTO[]> {
-//     return this.httpClient.get<ProductDTO[]>("http://localhost:8081/api/products/find-by-price/" + priceMin + "&" + priceMax)
-//   }
-// >>>>>>> baa7dfb7fddc84cc8ce40a1b6dd596b524ad79ce
 }

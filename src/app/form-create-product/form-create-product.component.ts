@@ -1,5 +1,5 @@
 import {AfterContentChecked, Component, Inject, Injectable, OnInit} from '@angular/core';
-import {Product} from "../model/Product";
+
 import {Brand} from "../model/Brand";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ProductService} from "../service/product.service";
@@ -8,10 +8,13 @@ import Swal from "sweetalert2";
 // @ts-ignore
 import {AngularFireStorage, AngularFireStorageReference} from "@angular/fire/compat/storage";
 import {finalize, Observable} from "rxjs";
+
 import {ProductDTO} from "../model/ProductDTO";
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 import {Router} from "@angular/router";
 import {AdminTableComponent} from "../admin-table/admin-table.component";
+import {Product} from "../model/product";
+
 
 @Component({
   selector: 'app-form-create-product',

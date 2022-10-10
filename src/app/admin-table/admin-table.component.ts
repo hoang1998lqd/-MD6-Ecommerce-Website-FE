@@ -2,7 +2,6 @@ import {AfterContentChecked, AfterViewInit, Component, OnInit, ViewChild} from '
 import {MatDialog} from "@angular/material/dialog";
 import {ProductService} from "../service/product.service";
 import {FormBuilder, FormGroup} from "@angular/forms";
-import {Product} from "../model/Product";
 import {Brand} from "../model/Brand";import Swal from 'sweetalert2'
 import {FormCreateProductComponent} from "../form-create-product/form-create-product.component";
 import {ProductDTO} from "../model/ProductDTO";
@@ -13,16 +12,20 @@ import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {Category} from "../model/Category";
 
 
+
 @Component({
   selector: 'app-admin-table',
   templateUrl: './admin-table.component.html',
   styleUrls: ['./admin-table.component.css']
 })
+
 export class AdminTableComponent implements OnInit, AfterContentChecked , AfterViewInit{
   listProduct!: MatTableDataSource<ProductDTO>
   products: ProductDTO [] = []
   brands: Brand [] = []
   categories: Category [] = []
+  listBrandByCategory: Brand [] = []
+
   productForm!: FormGroup;
   displayedColumns: string[] = ['stt','name', 'price', 'amount', 'color','image','edit','delete'];
 
@@ -152,7 +155,7 @@ export class AdminTableComponent implements OnInit, AfterContentChecked , AfterV
       cancelButtonText: 'Hủy',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.productService.deleteProduct(id).subscribe(value => {
+        this.productService.deleteProduct(id).subscribe(value =>  {
           this.displayProducts()
         }, error => {
           Swal.fire({

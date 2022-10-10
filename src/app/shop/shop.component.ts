@@ -2,7 +2,12 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {ProductDTO} from "../model/ProductDTO";
 import {ProductService} from "../service/product.service";
 import {Brand} from "../model/Brand";
+
+import {HttpClient} from "@angular/common/http";
+import {Observable} from "rxjs";
+import {environment} from "../../environments/environment";
 import {CartService} from "../service/cart.service";
+// @ts-ignore
 import {Item} from "../model/Item";
 import Swal from "sweetalert2";
 import {CategoryBrandService} from "../service/category-brand.service";
@@ -10,11 +15,15 @@ import {CategoryBrand} from "../model/CategoryBrand";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 
 
+const API_URL = environment.apiUrl + '/api/products';
+
+
 @Component({
   selector: 'app-shop',
   templateUrl: './shop.component.html',
   styleUrls: ['./shop.component.css']
 })
+
 export class ShopComponent implements OnInit {
   // Phân trang
   page: number = 1;
@@ -36,13 +45,24 @@ export class ShopComponent implements OnInit {
   ) {
   }
 
+
   ngOnInit(): void {
     const script1 = document.createElement('script');
     script1.src = './assets/js/vendor/modernizr-2.8.3.min.js';
     document.body.appendChild(script1);
+
     this.displayItem()
     this.findProductByCustomerId()
     this.displayBrandByCategory()
+
+    this.displayProduct()
+    this.displayBrands();
+  }
+
+  displayProduct() {
+    this.productService.findAllProducts().subscribe(data => {
+      this.products = data
+    })
   }
 
   ngAfterContentChecked() {
@@ -112,9 +132,9 @@ export class ShopComponent implements OnInit {
   }
 
 
-    displayProductsByValue(value:ProductDTO []){
-      this.listProduct = value
-    }
+  displayProductsByValue(value: ProductDTO []) {
+    this.listProduct = value
+  }
 
 
   // Hiển thị Brand và Category
@@ -179,6 +199,8 @@ export class ShopComponent implements OnInit {
             this.addItemToCartSuccess()
             setTimeout(() => {
               this.displayItem()
+              this.ngOnInit()
+
             }, 2000)
           })
         }
@@ -198,7 +220,11 @@ export class ShopComponent implements OnInit {
           console.log(value1);
           this.addItemToCartSuccess()
           setTimeout(() => {
+
             this.displayItem()
+
+            this.ngOnInit()
+
           }, 2000)
         })
       }
@@ -206,7 +232,8 @@ export class ShopComponent implements OnInit {
 
   }
 
-  deleteItem(idItem ?: number) {
+
+  deleteItem(idItem?: number) {
     Swal.fire({
       title: 'Xóa sản phẩm',
       text: "Xóa sản phẩm khỏi giỏ hàng",
@@ -245,11 +272,15 @@ export class ShopComponent implements OnInit {
 
   }
 
-  findImageURLFirst(idProduct
-                      :
-                      any
-  ):
-    any {
+  displayBrands() {
+    this.productService.findAllBrands().subscribe(value => {
+      this.brands = value;
+    })
+  }
+
+
+  findImageURLFirst(idProduct: any): any {
+
     let imageURL: any;
     let flag = false;
     if (idProduct != null) {
@@ -263,6 +294,18 @@ export class ShopComponent implements OnInit {
         }
       }
     }
+  }
+
+
+  // @ts-ignore
+  findBrandByCategoryId(idCategory: number): Brand[] {
+    let brands: Brand [] = []
+    this.productService.findBrandByCategory(idCategory).subscribe(value => {
+      brands = value
+      return brands;
+    })
+
+
   }
 
   addItemToCartSuccess() {
@@ -283,9 +326,8 @@ export class ShopComponent implements OnInit {
     })
   }
 
-  changePrice(money ?: number)
-    :
-    any {
+
+  changePrice(money?: number): any {
     const formatter = new Intl.NumberFormat('it-IT', {
       style: 'currency',
       currency: 'VND',
@@ -295,6 +337,7 @@ export class ShopComponent implements OnInit {
     }
 
   }
+
 
   findProductByCategoryId(idCategory ?: number) {
     // @ts-ignore
@@ -315,19 +358,12 @@ export class ShopComponent implements OnInit {
   }
 
   //Phân trang sản phẩm
-  onTableDataChange(event
-                      :
-                      any
-  ) {
+  onTableDataChange(event: any) {
     this.page = event;
     this.findProductByCustomerId();
   }
 
-  onTableSizeChange(event
-                      :
-                      any
-  ):
-    void {
+  onTableSizeChange(event: any): void {
     this.tableSize = event.target.value;
     this.page = 1;
     this.findProductByCustomerId();
@@ -340,6 +376,7 @@ export class ShopComponent implements OnInit {
     window.location.reload()
   }
 
+
   searchByNameProduct() {
     let idCustomer = localStorage.getItem("idCustomer")
     // @ts-ignore
@@ -348,6 +385,7 @@ export class ShopComponent implements OnInit {
       this.findProductByCustomerId()
     } else {
       this.productService.findProductByName(idCustomer, name).subscribe(value => {
+
         this.displayProductsByValue(value)
       })
     }
@@ -363,4 +401,5 @@ export class ShopComponent implements OnInit {
       this.displayProductsByValue(value)
     })
   }
+
 }

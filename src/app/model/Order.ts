@@ -1,6 +1,9 @@
 import {Customer} from "./Customer";
 
-export interface Order {
+
+import {Product} from "./product";
+
+export interface Orders {
   id?: number
   date_order?: Date
   date_ship?: Date
@@ -9,5 +12,13 @@ export interface Order {
   status_order?: number
   status_pay?: number
   customer?: Customer
+}
+
+
+
+export interface Orders_Detail {
+  product : Product;
+  quantity: number;
+
 }
 

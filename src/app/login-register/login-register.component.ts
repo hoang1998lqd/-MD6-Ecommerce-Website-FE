@@ -68,7 +68,17 @@ export class LoginRegisterComponent implements OnInit {
     }
     if (repassword == this.customerForm.value.password){
       this.customerService.createCustomer(customer).subscribe(value => {
+        let idCustomer = value.id
+        let cart = {
+          customer :{
+            id : idCustomer
+          }
+        }
+        return this.customerService.createCart(cart).subscribe(value1 => {
+          console.log(value1)
           this.createSuccess()
+          this.customerForm.reset()
+        })
         }, error1 => {
           this.createFail()
         }

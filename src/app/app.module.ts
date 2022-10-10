@@ -29,7 +29,7 @@ import {AngularFireAuth, AngularFireAuthModule} from "@angular/fire/compat/auth"
 // import {AngularFireAuth} from "@angular/fi"
 // @ts-ignore
 import {AngularFireModule} from "@angular/fire/compat";
-import {BrowserModule} from "@angular/platform-browser";
+
 import { SingleProductComponent } from './single-product/single-product.component';
 import { CheckoutComponent } from './checkout/checkout.component';
 import {MatTableModule} from "@angular/material/table";

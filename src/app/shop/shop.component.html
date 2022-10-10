@@ -155,8 +155,8 @@
                 <option value="15">Smartwatch</option>
                 <option value="16">Accessories</option>
               </select>
-              <input type="text" placeholder="Enter your search key ...">
-              <button class="li-btn" type="submit"><i class="fa fa-search"></i></button>
+              <input type="text" placeholder="Enter your search key ..." id="searchByName">
+              <button class="li-btn" type="submit" (click)="searchByNameProduct()" ><i class="fa fa-search"></i></button>
             </form>
             <!-- Header Middle Searchbox Area End Here -->
             <!-- Begin Header Middle Right Area -->
@@ -486,8 +486,30 @@
                 </form>
               </div>
             </div>
+
+            <div class="filter-sub-area pt-sm-10 pb-sm-15 pb-xs-15">
+              <h5 class="filter-sub-titel">PRICE</h5>
+            </div>
+            <!-- filter-sub-menu start -->
+            <div class="category-sub-menu">
+              <div>
+                <a style="display: flex; align-items: flex-start; justify-content: space-evenly">
+                    <span style="width: 40%; ">
+                    <input id="priceMin" style="border-radius: 4px; height:30px; border:1px solid;">
+                      </span>
+                  <p>-</p>
+                  <span style="width: 40%;">
+                    <input id="priceMax" style="border-radius: 4px; height:30px;border: 1px solid;" >
+                    </span>
+                </a>
+                <button (click)="searchByPrice()"class="custom-btn btn-16" style="float: right;margin-top: 20px ;margin-right: 10px; font-size: 16px;border-radius: 4px;    font-weight: 300;
+    color: black;border: 1px solid;">Search</button></div>
+            </div>
+
             <!-- filter-sub-area end -->
+
           </div>
+
           <!--sidebar-categores-box end  -->
           <!-- category-sub-menu start -->
           <div class="sidebar-categores-box mb-sm-0 mb-xs-0">

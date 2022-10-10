@@ -45,7 +45,7 @@ export class ShopComponent implements OnInit {
     this.displayBrandByCategory()
   }
 
-  ngAfterContentChecked(){
+  ngAfterContentChecked() {
     const script2 = document.createElement('script');
     script2.src = './assets/js/vendor/jquery-1.12.4.min.js';
     document.body.appendChild(script2);
@@ -111,6 +111,12 @@ export class ShopComponent implements OnInit {
     document.body.appendChild(script22);
   }
 
+
+    displayProductsByValue(value:ProductDTO []){
+      this.listProduct = value
+    }
+
+
   // Hiển thị Brand và Category
   displayBrandByCategory() {
     return this.categoryBrandService.findAllCategoryAndBrand().subscribe(value => {
@@ -141,7 +147,7 @@ export class ShopComponent implements OnInit {
     })
   }
 
-  addToCart(idProduct?: number) {
+  addToCart(idProduct ?: number) {
 
     // @ts-ignore
     let idCustomer = parseInt(localStorage.getItem("idCustomer"))
@@ -200,7 +206,7 @@ export class ShopComponent implements OnInit {
 
   }
 
-  deleteItem(idItem?: number) {
+  deleteItem(idItem ?: number) {
     Swal.fire({
       title: 'Xóa sản phẩm',
       text: "Xóa sản phẩm khỏi giỏ hàng",
@@ -239,7 +245,11 @@ export class ShopComponent implements OnInit {
 
   }
 
-  findImageURLFirst(idProduct: any): any {
+  findImageURLFirst(idProduct
+                      :
+                      any
+  ):
+    any {
     let imageURL: any;
     let flag = false;
     if (idProduct != null) {
@@ -273,7 +283,9 @@ export class ShopComponent implements OnInit {
     })
   }
 
-  changePrice(money?: number): any {
+  changePrice(money ?: number)
+    :
+    any {
     const formatter = new Intl.NumberFormat('it-IT', {
       style: 'currency',
       currency: 'VND',
@@ -284,7 +296,7 @@ export class ShopComponent implements OnInit {
 
   }
 
-  findProductByCategoryId(idCategory?: number) {
+  findProductByCategoryId(idCategory ?: number) {
     // @ts-ignore
     let idCustomer = parseInt(localStorage.getItem("idCustomer"))
     return this.productService.findAllProductByCategoryId(idCategory, idCustomer).subscribe(value => {
@@ -293,29 +305,62 @@ export class ShopComponent implements OnInit {
     })
   }
 
-  findAllProductByCategoryIdAndBrandId(idCategory?: number, idBrand?: number) {
+  findAllProductByCategoryIdAndBrandId(idCategory ?: number, idBrand ?: number) {
     // @ts-ignore
     let idCustomer = parseInt(localStorage.getItem("idCustomer"))
     return this.productService.findAllProductByCategoryIdAndBrandId(idCustomer, idCategory, idBrand)
       .subscribe(value => {
-      this.listProduct = value
-    })
+        this.listProduct = value
+      })
   }
 
   //Phân trang sản phẩm
-  onTableDataChange(event: any) {
+  onTableDataChange(event
+                      :
+                      any
+  ) {
     this.page = event;
     this.findProductByCustomerId();
   }
-  onTableSizeChange(event: any): void {
+
+  onTableSizeChange(event
+                      :
+                      any
+  ):
+    void {
     this.tableSize = event.target.value;
     this.page = 1;
     this.findProductByCustomerId();
   }
+
   //Phân trang sản phẩm
 
   //Load lại trang
-  loadPage(){
+  loadPage() {
     window.location.reload()
+  }
+
+  searchByNameProduct() {
+    let idCustomer = localStorage.getItem("idCustomer")
+    // @ts-ignore
+    let name = document.getElementById("searchByName").value
+    if (name == null) {
+      this.findProductByCustomerId()
+    } else {
+      this.productService.findProductByName(idCustomer, name).subscribe(value => {
+        this.displayProductsByValue(value)
+      })
+    }
+  }
+
+  searchByPrice() {
+    let idCustomer = localStorage.getItem("idCustomer")
+    // @ts-ignore
+    let priceMin = document.getElementById("priceMin").value
+    // @ts-ignore
+    let priceMax = document.getElementById("priceMax").value
+    this.productService.findProductByPrice(idCustomer, priceMin, priceMax).subscribe(value => {
+      this.displayProductsByValue(value)
+    })
   }
 }

@@ -12,8 +12,7 @@ import {Item} from "../model/Item";
 import Swal from "sweetalert2";
 import {CategoryBrandService} from "../service/category-brand.service";
 import {CategoryBrand} from "../model/CategoryBrand";
-import {MatPaginator, PageEvent} from "@angular/material/paginator";
-
+import {PageEvent} from "@angular/material/paginator";
 
 const API_URL = environment.apiUrl + '/api/products';
 
@@ -28,8 +27,8 @@ export class ShopComponent implements OnInit {
   // Phân trang
   page: number = 1;
   count: number = 0;
-  tableSize: number = 3;
-  tableSizes: any = [6, 9, 12];
+  tableSize: number | undefined = 3;
+  tableSizes: any = [3, 6, 9, 12];
   // Phân trang
 
   products: ProductDTO [] = []
@@ -55,8 +54,10 @@ export class ShopComponent implements OnInit {
     this.findProductByCustomerId()
     this.displayBrandByCategory()
 
+
     this.displayProduct()
     this.displayBrands();
+
   }
 
   displayProduct() {
@@ -335,7 +336,6 @@ export class ShopComponent implements OnInit {
     if (money != null) {
       return formatter.format(money);
     }
-
   }
 
 
@@ -369,6 +369,11 @@ export class ShopComponent implements OnInit {
     this.findProductByCustomerId();
   }
 
+
+  changeTableSize(size?:number){
+    this.tableSize = size
+  }
+
   //Phân trang sản phẩm
 
   //Load lại trang
@@ -400,6 +405,11 @@ export class ShopComponent implements OnInit {
     this.productService.findProductByPrice(idCustomer, priceMin, priceMax).subscribe(value => {
       this.displayProductsByValue(value)
     })
+  }
+
+  openMiniCart(){
+    // @ts-ignore
+    document.getElementById('cart').style.display = "block"
   }
 
 }

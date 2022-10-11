@@ -15,6 +15,7 @@ import {Product} from "../model/Product";
 })
 export class ProductService {
 
+
   constructor(private httpClient: HttpClient) {
   }
 
@@ -52,7 +53,6 @@ export class ProductService {
   }
 
   saveImage(image?: ImageURL): Observable<ImageURL> {
-
     return this.httpClient.post<ImageURL>("http://localhost:8081/api/products/imageURL", image)
   }
 
@@ -70,6 +70,7 @@ export class ProductService {
   }
 
   findAllProductByCustomerId(id?: number): Observable<ProductDTO[]> {
+
     return this.httpClient.get<ProductDTO[]>("http://localhost:8081/api/products/customer/" + id)
   }
 
@@ -77,12 +78,14 @@ export class ProductService {
     return this.httpClient.get<ProductDTO[]>("http://localhost:8081/api/products/not-customer/" + idCustomer)
   }
 
-  findAllProductByCategoryId(idCategory?:number, idCustomer?: number):Observable<ProductDTO[]>{
-    return this.httpClient.get<ProductDTO[]>("http://localhost:8081/api/products/find-by-id/"+idCategory+"&"+idCustomer)
+  findAllProductByCategoryId(idCategory?: number, idCustomer?: number): Observable<ProductDTO[]> {
+    return this.httpClient.get<ProductDTO[]>("http://localhost:8081/api/products/find-by-id/" + idCategory + "&" + idCustomer)
   }
-  findAllProductByCategoryIdAndBrandId( idCustomer?: number,idCategory?:number,idBrand?:number):Observable<ProductDTO[]>{
-    return this.httpClient.get<ProductDTO[]>("http://localhost:8081/api/products/brand/"+idCustomer+"&"+idCategory+"&"+idBrand)
+
+  findAllProductByCategoryIdAndBrandId(idCustomer?: number, idCategory?: number, idBrand?: number): Observable<ProductDTO[]> {
+    return this.httpClient.get<ProductDTO[]>("http://localhost:8081/api/products/brand/" + idCustomer + "&" + idCategory + "&" + idBrand)
   }
+
 
   findProductByName(idCustomer?: any, name?: string): Observable<ProductDTO[]> {
     return this.httpClient.get<ProductDTO[]>("http://localhost:8081/api/products/find-name-products/" + name + "&" + idCustomer);
@@ -98,4 +101,7 @@ export class ProductService {
     return this.httpClient.get<ProductDTO[]>("http://localhost:8081/api/products/find-by-id/" + id + "&" + idCustomer)
   }
 
+  detailProduct(idCustomer?: number, idProduct?: number): Observable<ProductDTO> {
+    return this.httpClient.get<ProductDTO>("http://localhost:8081/api/products/detail-product/" + idCustomer + "&" + idProduct)
+  }
 }

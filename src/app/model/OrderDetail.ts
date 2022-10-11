@@ -1,4 +1,9 @@
+import {Orders} from "./Orders";
+import {Product} from "./Product";
+
 export interface OrderDetail {
-  name: string,
-  quantity: number
+  id?: number
+  quantity?: number
+  orders?: Orders
+  product?: Product
 }

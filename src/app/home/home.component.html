@@ -112,10 +112,46 @@
                 </li>
                 <!-- Header Middle Wishlist Area End Here -->
                 <!-- Begin Header Mini Cart Area -->
+<!--                <li class="hm-minicart">-->
+<!--                  <div class="hm-minicart-trigger" >-->
+<!--                    <span class="item-icon"></span>-->
+<!--                    <span class="item-text">-->
+<!--                                                    <span class="cart-item-count">{{items.length}}</span>-->
+<!--                                                </span>-->
+<!--                  </div>-->
+<!--                  <span></span>-->
+<!--                  <div class="minicart" id="cart">-->
+<!--                    <ul class="minicart-product-list" *ngFor="let item of items">-->
+<!--                      <li>-->
+<!--                        <a href="single-product.html" class="minicart-product-image">-->
+<!--                          <img [src]="findImageURLFirst(item.product!.id)" alt="cart products">-->
+<!--                        </a>-->
+<!--                        <div class="minicart-product-details">-->
+<!--                          <h6><a href="single-product.html">{{item.product!.name}}</a></h6>-->
+<!--                          <span>{{changePrice(item.product!.price)}} x{{item.quantity}}</span>-->
+<!--                        </div>-->
+<!--                        <button class="close" title="Remove">-->
+<!--                          <i class="fa fa-close" (click)="deleteItem(item!.id)"></i>-->
+<!--                        </button>-->
+<!--                      </li>-->
+<!--                    </ul>-->
+<!--                    <p class="minicart-total">Tổng tiền: <span>{{changePrice(total)}}</span></p>-->
+<!--                    <div class="minicart-button">-->
+<!--                      <a routerLink="/shopping-cart" class="li-button li-button-fullwidth li-button-dark">-->
+<!--                        <span>Xem giỏ hàng</span>-->
+<!--                      </a>-->
+<!--                      <a href="checkout.html" class="li-button li-button-fullwidth">-->
+<!--                        <span>Thanh toán</span>-->
+<!--                      </a>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </li>-->
+                <!-- Header Mini Cart Area End Here -->
+                <!-- Begin Header Mini Cart Area -->
                 <li class="hm-minicart">
                   <div class="hm-minicart-trigger">
                     <span class="item-icon"></span>
-                    <span class="item-text">£160
+                    <span class="item-text">£80.00
                                                     <span class="cart-item-count">2</span>
                                                 </span>
                   </div>
@@ -124,11 +160,11 @@
                     <ul class="minicart-product-list">
                       <li>
                         <a href="single-product.html" class="minicart-product-image">
-                          <img src="assets/images/product/small-size/3.jpg" alt="cart products">
+                          <img src="images/product/small-size/1.jpg" alt="cart products">
                         </a>
                         <div class="minicart-product-details">
                           <h6><a href="single-product.html">Aenean eu tristique</a></h6>
-                          <span>£80 x 1</span>
+                          <span>£40 x 1</span>
                         </div>
                         <button class="close">
                           <i class="fa fa-close"></i>
@@ -136,20 +172,20 @@
                       </li>
                       <li>
                         <a href="single-product.html" class="minicart-product-image">
-                          <img src="assets/images/product/small-size/4.jpg" alt="cart products">
+                          <img src="images/product/small-size/2.jpg" alt="cart products">
                         </a>
                         <div class="minicart-product-details">
                           <h6><a href="single-product.html">Aenean eu tristique</a></h6>
-                          <span>£80 x 1</span>
+                          <span>£40 x 1</span>
                         </div>
                         <button class="close">
                           <i class="fa fa-close"></i>
                         </button>
                       </li>
                     </ul>
-                    <p class="minicart-total">SUBTOTAL: <span>£160</span></p>
+                    <p class="minicart-total">SUBTOTAL: <span>£80.00</span></p>
                     <div class="minicart-button">
-                      <a routerLink="/shopping-cart" class="li-button li-button-dark li-button-fullwidth li-button-sm">
+                      <a href="checkout.html" class="li-button li-button-dark li-button-fullwidth li-button-sm">
                         <span>View Full Cart</span>
                       </a>
                       <a href="checkout.html" class="li-button li-button-fullwidth li-button-sm">
@@ -178,9 +214,9 @@
               <nav>
                 <ul>
                   <li class="dropdown-holder">
-                    <a>Home</a>
+                    <a>Trang chủ</a>
                   </li>
-                  <li class="megamenu-holder"><a routerLink="/shop">Shop</a>
+                  <li class="megamenu-holder"><a routerLink="/shop">Mua hàng</a>
                   </li>
 
                   <!-- Header Bottom Menu Information Area End Here -->
@@ -214,8 +250,22 @@
           <!--Category Menu Start-->
           <div class="category-menu">
             <div class="category-heading">
-              <h2 class="categories-toggle"><span>categories</span></h2>
+              <h2 class="categories-toggle"><span>Danh mục</span></h2>
             </div>
+<!--            <div id="cate-toggle" class="category-menu-list">-->
+<!--              <ul *ngFor="let categoryBrand of categoryBrands">-->
+<!--                <li class="right-menu"><a  (click)="findProductByCategoryId(categoryBrand.category!.id)" style="font-size: 16px; cursor: pointer">{{categoryBrand.category!.name}}</a>-->
+<!--                  <ul class="cat-mega-menu cat-mega-menu-2" style="height: auto; width: 300px">-->
+<!--                    <li class="right-menu cat-mega-title">-->
+<!--                      <a href="shop-left-sidebar.html" style="font-size: 15px">{{categoryBrand.category!.name}}</a>-->
+<!--                      <ul  *ngFor="let brand of categoryBrand.brands">-->
+<!--                        <li><a (click)="findAllProductByCategoryIdAndBrandId(categoryBrand.category!.id, brand.id)" style="font-size: 14px; cursor: pointer; color: blue">{{brand.name}}</a></li>-->
+<!--                      </ul>-->
+<!--                    </li>-->
+<!--                  </ul>-->
+<!--                </li>-->
+<!--              </ul>-->
+<!--            </div>-->
             <div id="cate-toggle" class="category-menu-list">
               <ul>
                 <li class="right-menu"><a href="shop-left-sidebar.html">Laptops</a>
@@ -274,7 +324,7 @@
                       </ul>
                     </li>
                     <li class="right-menu cat-mega-title">
-                      <a href="shop-left-sidebar.html">Meito</a>
+                      <a href="shop-left-sidebar.html">Sanai</a>
                       <ul>
                         <li><a href="#">Hard Drives</a></li>
                         <li><a href="#">Graphic Cards</a></li>
@@ -286,7 +336,7 @@
                       </ul>
                     </li>
                     <li class="right-menu cat-mega-title">
-                      <a href="shop-left-sidebar.html">Sony Bravia</a>
+                      <a href="shop-left-sidebar.html">Meito</a>
                       <ul>
                         <li><a href="#">Sound Cards</a></li>
                         <li><a href="#">Cases & Towers</a></li>
@@ -312,7 +362,7 @@
                       </ul>
                     </li>
                     <li class="right-menu cat-mega-title">
-                      <a href="shop-left-sidebar.html">XailStation</a>
+                      <a href="shop-left-sidebar.html">Meito</a>
                       <ul>
                         <li><a href="#">Batteries</a></li>
                         <li><a href="#">Microphones</a></li>

@@ -14,5 +14,4 @@ export interface Product {
   brand?: Brand
   category?: Category
   customer?: Customer
-
 }

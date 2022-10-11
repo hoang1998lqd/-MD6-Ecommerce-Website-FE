@@ -10,6 +10,7 @@ import {PageNotFoundComponent} from "./page-not-found/page-not-found.component";
 import {SingleProductComponent} from "./single-product/single-product.component";
 import {CheckoutComponent} from "./checkout/checkout.component";
 
+
 const routes: Routes = [
   {
     path: "admin-table", component: AdminTableComponent,

@@ -8,23 +8,10 @@
     <div class="table-responsive">
       <div class="mat-elevation-z8">
         <table mat-table [dataSource]="listOrder" matSort >
-
-          <!-- Position Column -->
-
-          <ng-container matColumnDef="stt">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header > No. </th>
-            <td mat-cell *matCellDef="let i = index"> {{i+1}} </td>
-          </ng-container>
           <!-- Name Column -->
           <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header > Name </th>
-            <td mat-cell style="width: 400px;" *matCellDef="let element"> {{element.product.name}} </td>
-          </ng-container>
-
-          <!-- Price Column -->
-          <ng-container matColumnDef="price">
-            <th mat-header-cell *matHeaderCellDef  mat-sort-header > Price </th>
-            <td mat-cell *matCellDef="let element"> {{element.product.price}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header > Product </th>
+            <td mat-cell style="width: 400px;" *matCellDef="let element"> {{element.details.name}} </td>
           </ng-container>
 
           <!-- Image Column -->
@@ -33,12 +20,23 @@
             <td mat-cell style="height: 200px; width: 200px" *matCellDef="let element"><img width="50%" height="50%" [src]="element.imageURLS[0]" > </td>
           </ng-container>
 
-          <!-- Edit Column -->
-<!--          <ng-container matColumnDef="edit">-->
-<!--            <th mat-header-cell *matHeaderCellDef mat-sort-header>Edit</th>-->
-<!--            <td mat-cell *matCellDef="let element">-->
+          <!-- Price Column -->
+          <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef  mat-sort-header > Price </th>
+            <td mat-cell *matCellDef="let element"> {{element.details.price}} </td>
+          </ng-container>
+
+          <!-- Position Column -->
+          <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header > Quantity </th>
+            <td mat-cell *matCellDef="let element"> {{element.details.quantity}} </td>
+          </ng-container>
+           Edit Column
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Confirm</th>
+            <td mat-cell *matCellDef="let element">
 <!--              <a style="cursor: pointer"><mat-icon (click)="getProductUpdate(element.product.id)">edit</mat-icon></a> </td>-->
-<!--          </ng-container>-->
+          </ng-container>
 
           <!-- Edit Column -->
 <!--          <ng-container matColumnDef="delete">-->
@@ -55,7 +53,6 @@
                        aria-label="Select page of periodic elements">
         </mat-paginator>
       </div>
-
 
 
     </div>

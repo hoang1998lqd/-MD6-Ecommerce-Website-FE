@@ -10,14 +10,14 @@ import {Orders} from "../model/Order";
 })
 export class OrderComponent implements OnInit {
   listOrder: Orders[] = []
-
-  displayedColumns: string[] = ['', 'customer', 'price', 'Action'];
+  displayedColumns: string[] = ['name', 'image', 'price', 'quantity', 'action'];
   // dataSource = ELEMENT_DATA;
 
   constructor(private orderService: OrderService) { }
 
   ngOnInit(): void {
     this.displayAllOrder()
+    this.findAllOrderByCustomer()
   }
 
   displayAllOrder(){
@@ -26,6 +26,18 @@ export class OrderComponent implements OnInit {
       console.log(value)
     })
   }
+
+  // tim kiem order theo nguoi dung
+  findAllOrderByCustomer(){
+    // @ts-ignore
+    let idCustomer = parseInt(localStorage.getItem("idCustomer"))
+    this.orderService.findAllOrderByCustomer(idCustomer).subscribe(value => {
+      this.listOrder = value
+    })
+  }
+
+
+
 }
 
 // export interface Order {

@@ -368,7 +368,7 @@
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
           <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Danh sách sản phẩm</h6>
             <h6 class="m-0 font-weight-bold text-primary"></h6>
 <!--              <button type="submit" class="btn btn-primary" data-toggle="modal" (click)="openModal()">Create New Product</button>-->
           </div>
@@ -380,50 +380,50 @@
                   <!-- Position Column -->
 
                   <ng-container matColumnDef="stt">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header > No. </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header > STT </th>
                     <td mat-cell *matCellDef="let i = index"> {{i+1}} </td>
                   </ng-container>
                   <!-- Name Column -->
                   <ng-container matColumnDef="name">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header > Name </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header > Tên sản phẩm </th>
                     <td mat-cell style="width: 400px;" *matCellDef="let element"> {{element.product.name}} </td>
                   </ng-container>
 
                   <!-- Price Column -->
                   <ng-container matColumnDef="price">
-                    <th mat-header-cell *matHeaderCellDef  mat-sort-header > Price </th>
+                    <th mat-header-cell *matHeaderCellDef  mat-sort-header > Đơn giá </th>
                     <td mat-cell *matCellDef="let element"> {{element.product.price}} </td>
                   </ng-container>
 
                   <!-- Amount Column -->
                   <ng-container matColumnDef="amount">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Amount </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Số lượng </th>
                     <td mat-cell *matCellDef="let element"> {{element.product.amount}} </td>
                   </ng-container>
 
                   <!-- Color Column -->
                   <ng-container matColumnDef="color">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header > Color </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header > Màu sắc </th>
                     <td mat-cell *matCellDef="let element"> {{element.product.color}} </td>
                   </ng-container>
 
 
                   <!-- Image Column -->
                   <ng-container matColumnDef="image">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header > Image </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header > Ảnh </th>
                     <td mat-cell style="height: 200px; width: 200px" *matCellDef="let element"><img width="50%" height="50%" [src]="element.imageURLS[0]" > </td>
                   </ng-container>
 
                   <!-- Edit Column -->
                   <ng-container matColumnDef="edit">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Edit</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Sửa</th>
                     <td mat-cell *matCellDef="let element">
                       <a style="cursor: pointer"><mat-icon (click)="getProductUpdate(element.product.id)">edit</mat-icon></a> </td>
                   </ng-container>
 
                   <!-- Edit Column -->
                   <ng-container matColumnDef="delete">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Delete </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Xóa </th>
                     <td mat-cell *matCellDef="let element"><a style="cursor: pointer" (click)="deleteProduct(element.product.id)"><mat-icon>delete</mat-icon></a> </td>
                   </ng-container>
 

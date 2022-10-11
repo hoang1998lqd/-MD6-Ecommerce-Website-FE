@@ -172,7 +172,14 @@
                 <!-- Header Middle Wishlist Area End Here -->
                 <!-- Begin Header Mini Cart Area -->
                 <li class="hm-minicart">
-                  <div class="hm-minicart-trigger" >
+                  <div style="    border-radius: 2px;
+    background: #e80f0f;
+    color: #fff;
+    height: 45px;
+    cursor: pointer;
+    display: block;
+    position: relative;
+    padding: 0 15px 0 55px;" (click)="openMiniCart()" >
                     <span class="item-icon"></span>
                     <span class="item-text">
                                                     <span class="cart-item-count">{{items.length}}</span>
@@ -374,10 +381,18 @@
                   <div class="col-lg-6 col-md-6">
                     <ul class="pagination-box pt-xs-20 pb-xs-15">
                       <div class="d-flex justify-content-center">
+                        <mat-form-field appearance="fill">
+                          <mat-label>Lựa chọn</mat-label>
+                          <mat-select>
+                            <mat-option *ngFor="let food of tableSizes" [value]="food" (click)="changeTableSize(food)" >
+                              {{food}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
                         <pagination-controls
                           previousLabel="Trước"
                           nextLabel="Sau"
-                          (pageChange)="onTableDataChange($event)"
+                          (pageChange)="page = $event"
                         >
                         </pagination-controls>
                       </div>

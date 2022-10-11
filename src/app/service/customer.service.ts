@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {BehaviorSubject, map, Observable} from "rxjs";
 import {Customer} from "../model/Customer";
 import {CustomerToken} from "../model/customer-token";
+import {Cart} from "../model/Cart";
 
 @Injectable({
   providedIn: 'root'
@@ -61,4 +62,13 @@ export class CustomerService {
     // @ts-ignore
     this.currentCustomerSubject.next(null);
   }
+  createCart(cart ?: Cart):Observable<Cart>{
+    return this.httpClient.post<Cart>("http://localhost:8081/api/carts",cart);
+  }
+
+  // Tìm kiếm người dùng có quyền bán hàng
+  findAllCustomerHaveShop():Observable<Customer[]>{
+    return  this.httpClient.get<Customer[]>("http://localhost:8081/api/customers/shop")
+  }
+
 }

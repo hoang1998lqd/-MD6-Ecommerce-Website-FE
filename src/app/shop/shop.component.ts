@@ -7,8 +7,7 @@ import {Item} from "../model/Item";
 import Swal from "sweetalert2";
 import {CategoryBrandService} from "../service/category-brand.service";
 import {CategoryBrand} from "../model/CategoryBrand";
-import {MatPaginator, PageEvent} from "@angular/material/paginator";
-
+import {PageEvent} from "@angular/material/paginator";
 
 @Component({
   selector: 'app-shop',
@@ -19,8 +18,8 @@ export class ShopComponent implements OnInit {
   // Phân trang
   page: number = 1;
   count: number = 0;
-  tableSize: number = 3;
-  tableSizes: any = [6, 9, 12];
+  tableSize: number | undefined = 3;
+  tableSizes: any = [3, 6, 9, 12];
   // Phân trang
 
   products: ProductDTO [] = []
@@ -43,6 +42,7 @@ export class ShopComponent implements OnInit {
     this.displayItem()
     this.findProductByCustomerId()
     this.displayBrandByCategory()
+
   }
 
   ngAfterContentChecked(){
@@ -311,10 +311,19 @@ export class ShopComponent implements OnInit {
     this.page = 1;
     this.findProductByCustomerId();
   }
+
+  changeTableSize(size?:number){
+    this.tableSize = size
+  }
   //Phân trang sản phẩm
 
   //Load lại trang
   loadPage(){
     window.location.reload()
+  }
+
+  openMiniCart(){
+    // @ts-ignore
+    document.getElementById('cart').style.display = "block"
   }
 }

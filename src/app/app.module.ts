@@ -32,7 +32,7 @@ import { CheckoutComponent } from './checkout/checkout.component';
 import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatSortModule} from "@angular/material/sort";
-import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions, MatCheckboxModule} from "@angular/material/checkbox";
 import {NgxPaginationModule} from "ngx-pagination";
 
 

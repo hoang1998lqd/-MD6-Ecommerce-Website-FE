@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {Orders} from "../model/Orders";
+import {Order} from "../model/Order";
 
 @Injectable({
   providedIn: 'root'
@@ -9,15 +9,15 @@ import {Orders} from "../model/Orders";
 export class OrderService {
 
   constructor(private httpClient: HttpClient) { }
-  findAllOrder(): Observable<Orders[]> {
-    return this.httpClient.get<Orders[]>("http://localhost:8081/api/orders")
+  findAllOrder(): Observable<Order[]> {
+    return this.httpClient.get<Order[]>("http://localhost:8081/api/orders")
   }
 
-  updateOrder(order?: Orders): Observable<Orders> {
-    return this.httpClient.put<Orders>("http://localhost:8081/api/orders", order)
+  updateOrder(order?: Order): Observable<Order> {
+    return this.httpClient.put<Order>("http://localhost:8081/api/orders", order)
   }
 
-  findOrderById(id?: number): Observable<Orders> {
-    return this.httpClient.get<Orders>("http://localhost:8081/api/orders" + id)
+  findOrderById(id?: number): Observable<Order> {
+    return this.httpClient.get<Order>("http://localhost:8081/api/orders" + id)
   }
 }

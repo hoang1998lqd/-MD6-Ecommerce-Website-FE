@@ -7,6 +7,7 @@ import {CustomerService} from "../service/customer.service";
 import {data, error} from "jquery";
 import {first} from "rxjs";
 import {Router} from "@angular/router";
+import {F} from "@angular/cdk/keycodes";
 @Component({
   selector: 'app-login-register',
   templateUrl: './login-register.component.html',
@@ -34,20 +35,20 @@ export class LoginRegisterComponent implements OnInit {
     this.idCurrentCustomer = parseInt(localStorage.getItem("idCustomer"))
 
     this.customerForm = this.formGroup.group({
-      id: [''],
-      name: [''],
-      emailAddress: [''],
-      password: [''],
-      phoneNumber: [''],
-      address: [''],
-      image: [''],
-      status: [''],
-      role: [''],
+      id: new FormControl(""),
+      name: new FormControl("", Validators.compose([Validators.required, Validators.minLength(8)])),
+      emailAddress: new FormControl("", Validators.compose([Validators.required, Validators.email])),
+      password: new FormControl("", Validators.compose([Validators.required, Validators.pattern("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")])),
+      phoneNumber: new FormControl("", Validators.compose([Validators.required, Validators.pattern("^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$")])),
+      address: new FormControl("", Validators.compose([Validators.required, Validators.minLength(5)])),
+      image: new FormControl(""),
+      status: new FormControl(""),
+      role: new FormControl(""),
     });
 
-    this.loginForm = this.formGroup.group({
-      usename: [''],
-      password: [''],
+    this.loginForm = new FormGroup({
+      usename: new FormControl("", Validators.required),
+      password: new FormControl("", Validators.required)
     })
   }
 
@@ -65,7 +66,7 @@ export class LoginRegisterComponent implements OnInit {
       status: 1,
       role:[
         {
-          id: 3
+          id: 1
         }
       ]
     }
@@ -155,16 +156,15 @@ export class LoginRegisterComponent implements OnInit {
         localStorage.setItem("idCustomer",value.id);
         // @ts-ignore
         localStorage.setItem("token",value.token);
-        if (this.loginSuccess()){
           // @ts-ignore
           this.directCustomer(value.roles[0].authority)
-        }
       }, error =>{
         this.loginFail()
       })
   }
   directCustomer(roles?: string){
     if (roles == "ADMIN"){
+<<<<<<< HEAD
      this.router.navigate(['ADMIN'])
     }
     if (roles == "ADMIN"){
@@ -172,6 +172,15 @@ export class LoginRegisterComponent implements OnInit {
     }
     if (roles == "ADMIN"){
       this.router.navigate(['ADMIN'])
+=======
+     this.router.navigate(['admin'])
+    }
+    if (roles == "SELLER"){
+      this.router.navigate(['shop'])
+    }
+    if (roles == "CUSTOMER"){
+      this.router.navigate(['shop'])
+>>>>>>> 2cc2b551d8269dc764fefce556726b0da793eca1
     }
   }
 

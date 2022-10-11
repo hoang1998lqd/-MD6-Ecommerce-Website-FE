@@ -14,7 +14,7 @@
           <div class="col-lg-3 col-md-4">
             <div class="header-top-left">
               <ul class="phone-wrap">
-                <li><span>Telephone Enquiry:</span><a href="#">(+123) 123 321 345</a></li>
+                <li><span>Telephone Enquiry:</span><a>(+123) 123 321 345</a></li>
               </ul>
             </div>
           </div>
@@ -331,17 +331,22 @@
                                 </ul>
                               </div>
                             </div>
-                            <h4><a class="product_name" href="single-product.html">{{p.product!.name}}</a></h4>
+                            <h4><a class="product_name" [routerLink]="['/single-product']" [queryParams]="{id: p.product!.id}">{{p.product!.name}}</a></h4>
                             <div class="price-box">
                               <span class="new-price">{{changePrice(p.product!.price)}}</span>
                             </div>
                           </div>
                           <div class="add-actions">
                             <ul class="add-actions-link">
+<<<<<<< HEAD
                               <li class="add-cart active"><a style="cursor: pointer" (click)="addToCart(p.product!.id)">Add
                                 to cart </a></li>
                               <li><a href="#" title="quick view" class="quick-view-btn" data-toggle="modal"
                                      data-target="#exampleModalCenter"><i class="fa fa-eye"></i></a></li>
+=======
+                              <li class="add-cart active"><a style="cursor: pointer" (click)="addToCart(p.product!.id)">Add to cart </a></li>
+                              <li><a [routerLink]="['/single-product']" [queryParams]="{id: p.product!.id}" title="quick view" data-target="#exampleModalCenter"><i class="fa fa-eye"></i></a></li>
+>>>>>>> 2cc2b551d8269dc764fefce556726b0da793eca1
                               <li><a class="links-details" href="wishlist.html"><i class="fa fa-heart-o"></i></a></li>
                             </ul>
                           </div>
@@ -596,7 +601,7 @@
                 </li>
                 <li>
                   <span>Phone: </span>
-                  <a href="#">(+123) 123 321 345</a>
+                  <a routerLink="/single-product/?id=3">(+123) 123 321 345</a>
                 </li>
                 <li>
                   <span>Email: </span>

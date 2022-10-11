@@ -286,7 +286,6 @@ export class ShopComponent implements OnInit {
     if (money != null) {
       return formatter.format(money);
     }
-
   }
 
   findProductByCategoryId(idCategory?: number) {

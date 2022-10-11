@@ -7,7 +7,7 @@ import {Brand} from "../model/Brand";
 import {ImageURL} from "../model/ImageURL";
 
 import {ProductDTO} from "../model/ProductDTO";
-import {Product} from "../model/product";
+import {Product} from "../model/Product";
 
 
 @Injectable({

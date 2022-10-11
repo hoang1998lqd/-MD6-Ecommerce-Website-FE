@@ -13,7 +13,7 @@ import {ProductDTO} from "../model/ProductDTO";
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 import {Router} from "@angular/router";
 import {AdminTableComponent} from "../admin-table/admin-table.component";
-import {Product} from "../model/product";
+import {Product} from "../model/Product";
 
 
 @Component({

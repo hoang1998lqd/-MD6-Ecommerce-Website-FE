@@ -14,14 +14,5 @@ export interface Product {
   brand?: Brand
   category?: Category
   customer?: Customer
-}
-function changePrice(money :any){
-  const formatter = new Intl.NumberFormat('it-IT', {
-    style: 'currency',
-    currency: 'VND',
-    // minimumFractionDigits: 2
-  })
-  return  formatter.format(money);
-}
 
-
+}

@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {AbstractControl, FormsModule, ReactiveFormsModule, ValidationErrors, Validators} from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule, RoutingComponent } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {HttpClientModule} from "@angular/common/http";
@@ -18,7 +17,6 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
-
 import { FormCreateProductComponent } from './form-create-product/form-create-product.component';
 import {MatSelectModule} from "@angular/material/select";
 // @ts-ignore
@@ -29,7 +27,6 @@ import {AngularFireAuth, AngularFireAuthModule} from "@angular/fire/compat/auth"
 // import {AngularFireAuth} from "@angular/fi"
 // @ts-ignore
 import {AngularFireModule} from "@angular/fire/compat";
-import {BrowserModule} from "@angular/platform-browser";
 import { SingleProductComponent } from './single-product/single-product.component';
 import { CheckoutComponent } from './checkout/checkout.component';
 import {MatTableModule} from "@angular/material/table";
@@ -77,6 +74,7 @@ import {NgxPaginationModule} from "ngx-pagination";
         MatSortModule,
         MatCheckboxModule,
         NgxPaginationModule,
+
     ],
   providers: [],
   bootstrap: [AppComponent]

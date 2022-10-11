@@ -31,6 +31,7 @@ export class ShoppingCartComponent implements OnInit {
   subtotal: number = 0;
   total: number = 0;
   DTOItems: DTOItem [] = []
+  idCurrentCustomer : number = 0
   // @ts-ignore
   idCustomerCurrent: number
   // List Shop in Cart
@@ -393,6 +394,8 @@ export class ShoppingCartComponent implements OnInit {
 
   //Find All DTOItem.ts theo id của người đang đăng nhập
   findAllDTOItem() {
+    // @ts-ignore
+    this.idCurrentCustomer = parseInt(localStorage.getItem("idCustomer"))
     return this.cartService.findAllDTOItem(this.idCustomerCurrent).subscribe(value => {
       console.log(value)
       this.DTOItems = value
@@ -467,6 +470,14 @@ export class ShoppingCartComponent implements OnInit {
       discountItem = 0
     }
     return discountItem
+  }
+  // Lưu Id Cửa hàng khi cần thanh toán
+  saveIdShop(idShop ?: any){
+    localStorage.setItem("idShop",idShop)
+  }
+  logOut(){
+    this.customerService.logOutCustomer();
+    window.location.replace("http://localhost:4200/login-register")
   }
 
 }

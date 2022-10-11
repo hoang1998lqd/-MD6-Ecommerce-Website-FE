@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Customer} from "../model/Customer";
 import {CustomerService} from "../service/customer.service";
 import {Item} from "../model/Item";
@@ -7,6 +7,8 @@ import {CartService} from "../service/cart.service";
 import Swal from "sweetalert2";
 import {OrdersService} from "../service/orders.service";
 import {OrderDetail} from "../model/OrderDetail";
+import {DTOItem} from "../model/DTOItem";
+import {ProductDTO} from "../model/ProductDTO";
 
 @Component({
   selector: 'app-checkout',
@@ -20,20 +22,28 @@ export class CheckoutComponent implements OnInit {
   subtotal: number = 0;
   discountItem: number = 0;
   voucherItem: number = 0;
+  DTOItems: DTOItem [] = []
+  idCurrentCustomer : number = 0
+  listProduct: ProductDTO [] = []
+  DTOItemCheckOut: DTOItem [] = []
 
-  constructor(private customerService: CustomerService,private productService: ProductService,
+  constructor(private customerService: CustomerService, private productService: ProductService,
               private cartService: CartService,
-              private orderService : OrdersService) { }
+              private orderService: OrdersService) {
+  }
 
   ngOnInit(): void {
     const script1 = document.createElement('script');
     script1.src = './assets/js/vendor/modernizr-2.8.3.min.js';
     document.body.appendChild(script1);
     this.findCurrentCustomer()
-    this.displayItem()
+    // this.displayItem()
+    this.findAllDTOItem()
+    this.findItemByShopId()
+    this.findProductByCustomerId()
   }
 
-  ngAfterContentChecked(){
+  ngAfterContentChecked() {
     const script2 = document.createElement('script');
     script2.src = './assets/js/vendor/jquery-1.12.4.min.js';
     document.body.appendChild(script2);
@@ -98,16 +108,38 @@ export class CheckoutComponent implements OnInit {
     script22.src = './assets/js/main.js';
     document.body.appendChild(script22);
   }
-
+  //Products của người mua hàng gồm cả người bán hàng nhưng không có sản phẩm của người bán đó
+  // Đấy là list Product hiển thị trên trang bán hàng
+  findProductByCustomerId() {
+    // @ts-ignore
+    let idCustomer = parseInt(localStorage.getItem("idCustomer"))
+    this.productService.findAllProductNotCustomerId(idCustomer).subscribe(value => {
+      this.listProduct = value
+    })
+  }
   // Tìm kiếm thông tin người dùng
-  findCurrentCustomer(){
+  findCurrentCustomer() {
     // @ts-ignore
     let idCustomer = parseInt(localStorage.getItem("idCustomer"))
     return this.customerService.findCustomerById(idCustomer).subscribe(value => {
       this.currentCustomer = value;
     })
   }
-
+  findImageURLFirst(idProduct: any): any {
+    let imageURL: any;
+    let flag = false;
+    if (idProduct != null) {
+      for (let i = 0; i < this.listProduct.length; i++) {
+        // @ts-ignore
+        if (this.listProduct[i].product.id == idProduct) {
+          flag = true
+          // @ts-ignore
+          imageURL = this.listProduct[i].imageURLS[0]
+          return imageURL;
+        }
+      }
+    }
+  }
   displayItem() {
     // @ts-ignore
     let idCustomer = parseInt(localStorage.getItem("idCustomer"))
@@ -152,17 +184,20 @@ export class CheckoutComponent implements OnInit {
     }
 
   }
+
+  // Lấy tổng tiền cho sản phẩm trong Cart
   getTotalItem(idItem: any): any {
+    let dtoItems = this.findItemByShopId()
     let totalMoney: any;
-    for (let i = 0; i < this.items.length; i++) {
-      if (this.items[i].id == idItem) {
+    for (let i = 0; i < dtoItems.length; i++) {
+      // @ts-ignore
+      if (dtoItems[i].item.id == idItem) {
         // @ts-ignore
-        totalMoney = this.items[i].quantity * this.items[i].product.price
+        totalMoney = dtoItems[i].item.quantity * dtoItems[i].item.product.price
         return totalMoney
       }
     }
   }
-
   deleteItem(idItem?: number) {
     Swal.fire({
       title: 'Xóa sản phẩm',
@@ -204,40 +239,53 @@ export class CheckoutComponent implements OnInit {
 
   // Cần thay đổi Id của cửa hàng
 
-  createOrder(){
+  createOrder() {
+    // @ts-ignore
+    let idShop = parseInt(localStorage.getItem("idShop"))
     // @ts-ignore
     let description = document.getElementById('checkout-mess').value
     let order = {
-      description : description,
+      description: description,
       customer: {
         id: this.currentCustomer.id
       },
-      shop_id : this.items[1].product!.customer!.id
+      shop_id: idShop
     }
     // @ts-ignore
     return this.orderService.createOrder(order).subscribe(value => {
       let orderDetails: OrderDetail [] = [];
-      for (let i = 0; i < this.items.length; i++) {
+      let dtoItemCheckOut = this.findItemByShopId()
+      console.log(dtoItemCheckOut)
+      for (let i = 0; i < dtoItemCheckOut.length; i++) {
+        // @ts-ignore
+        let quantity = dtoItemCheckOut[i].item.quantity
+        // @ts-ignore
         let orderDetail = {
-          quantity : this.items[i].quantity,
-          orders : {
-            id : value.id
+          quantity: quantity,
+          orders: {
+            id: value.id
           },
-          product : this.items[i].product
+          product: {
+            id: dtoItemCheckOut[i].item.product.id
+          }
         }
         orderDetails.push(orderDetail)
       }
-      console.log( "Trước khi lưu" + orderDetails)
+      console.log("Trước khi lưu" + orderDetails)
       return this.orderService.createOrderDetail(orderDetails).subscribe(value1 => {
+        console.log(value1)
         // @ts-ignore
         document.getElementById('checkout-mess').value = ""
-        for (let i = 0; i < this.items.length; i++) {
-          this.cartService.deleteItem(this.items[i].id).subscribe()
+        for (let i = 0; i < dtoItemCheckOut.length; i++) {
+          // @ts-ignore
+          this.cartService.deleteItem(dtoItemCheckOut[i].item.id).subscribe(() =>{
+            localStorage.removeItem("idShop")
+          })
         }
         this.createSuccess()
-        setTimeout(() =>{
+        setTimeout(() => {
           window.location.reload()
-        },1700)
+        }, 1700)
       })
     })
   }
@@ -252,4 +300,94 @@ export class CheckoutComponent implements OnInit {
     })
   }
 
+  //Find All DTOItem.ts theo id của người đang đăng nhập
+  findAllDTOItem() {
+    // @ts-ignore
+    this.idCurrentCustomer = parseInt(localStorage.getItem("idCustomer"))
+    // @ts-ignore
+    let idCustomerCurrent = parseInt(localStorage.getItem("idCustomer"))
+    return this.cartService.findAllDTOItem(idCustomerCurrent).subscribe(value => {
+      console.log(value)
+      this.DTOItems = value
+    })
+  }
+
+  findItemByShopId(): any {
+    // @ts-ignore
+    let idShop = parseInt(localStorage.getItem("idShop"))
+    let DTOItems: DTOItem[] = [];
+    for (let i = 0; i < this.DTOItems.length; i++) {
+      if (this.DTOItems[i].shop_id == idShop) {
+        DTOItems.push(this.DTOItems[i])
+      }
+    }
+    return DTOItems;
+  }
+
+  subtotalMoney(): any {
+    // @ts-ignore
+    let idShop = parseInt(localStorage.getItem("idShop"))
+    let DTOItems: DTOItem[] = [];
+    let subtotal = 0;
+    for (let i = 0; i < this.DTOItems.length; i++) {
+      if (this.DTOItems[i].shop_id == idShop) {
+        DTOItems.push(this.DTOItems[i])
+      }
+    }
+    for (let i = 0; i < DTOItems.length; i++) {
+      // @ts-ignore
+      subtotal += DTOItems[i].item.product.price * DTOItems[i].item.quantity
+    }
+    return subtotal
+
+  }
+
+  totalMoney(): any {
+    // @ts-ignore
+    let idShop = parseInt(localStorage.getItem("idShop"))
+    let total = 0
+    let DTOItems: DTOItem[] = [];
+    let subtotal = 0;
+    for (let i = 0; i < this.DTOItems.length; i++) {
+      if (this.DTOItems[i].shop_id == idShop) {
+        DTOItems.push(this.DTOItems[i])
+      }
+    }
+    for (let i = 0; i < DTOItems.length; i++) {
+      // @ts-ignore
+      subtotal += DTOItems[i].item.product.price * DTOItems[i].item.quantity
+    }
+    if (subtotal > 100000000) {
+      total = subtotal - subtotal * this.voucherItem / 100 - subtotal * 0.3
+      this.discountItem = 30
+    } else if (subtotal > 50000000) {
+      total = subtotal - subtotal * this.voucherItem / 100 - subtotal * 0.15
+      this.discountItem = 15
+    } else if (subtotal > 30000000) {
+      total = subtotal - subtotal * this.voucherItem / 100 - subtotal * 0.1
+      this.discountItem = 10
+    } else {
+      total = subtotal - subtotal * this.voucherItem / 100
+      this.discountItem = 0
+    }
+    return total;
+  }
+
+  discountAutomatic(subtotal: number): any {
+    let discountItem = 0
+    if (subtotal > 100000000) {
+      discountItem = 30
+    } else if (subtotal > 50000000) {
+      discountItem = 15
+    } else if (subtotal > 30000000) {
+      discountItem = 10
+    } else {
+      discountItem = 0
+    }
+    return discountItem
+  }
+  logOut(){
+    this.customerService.logOutCustomer();
+    window.location.replace("http://localhost:4200/login-register")
+  }
 }

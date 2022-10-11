@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 import {CategoryBrandService} from "../service/category-brand.service";
 import {CategoryBrand} from "../model/CategoryBrand";
 import {PageEvent} from "@angular/material/paginator";
+import {CustomerService} from "../service/customer.service";
 
 @Component({
   selector: 'app-shop',
@@ -28,10 +29,12 @@ export class ShopComponent implements OnInit {
   items: Item [] = []
   categoryBrands: CategoryBrand[] = []
   listProduct: ProductDTO [] = []
+  idCurrentCustomer : number = 0
 
   constructor(private productService: ProductService,
               private cartService: CartService,
               private categoryBrandService: CategoryBrandService,
+              private customerService: CustomerService
   ) {
   }
 
@@ -130,6 +133,8 @@ export class ShopComponent implements OnInit {
   }
 
   displayItem() {
+    // @ts-ignore
+    this.idCurrentCustomer = parseInt(localStorage.getItem("idCustomer"))
     // @ts-ignore
     let idCustomer = parseInt(localStorage.getItem("idCustomer"))
     this.cartService.findAllItemByCustomerId(idCustomer).subscribe(value => {
@@ -327,4 +332,9 @@ export class ShopComponent implements OnInit {
     // @ts-ignore
     document.getElementById('cart').style.display = "block"
   }
+  logOut(){
+    this.customerService.logOutCustomer();
+    window.location.replace("http://localhost:4200/login-register")
+  }
+
 }

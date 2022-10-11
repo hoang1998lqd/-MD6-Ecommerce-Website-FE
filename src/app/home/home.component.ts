@@ -7,6 +7,7 @@ import {ProductDTO} from "../model/ProductDTO";
 import {ProductService} from "../service/product.service";
 import {CartService} from "../service/cart.service";
 import Swal from "sweetalert2";
+import {CustomerService} from "../service/customer.service";
 
 @Component({
   selector: 'app-home',
@@ -18,18 +19,20 @@ export class HomeComponent implements OnInit {
   items: Item [] = []
   total: number = 0;
   listProduct: ProductDTO [] = []
+  idCurrentCustomer : number = 0
   constructor(private router: Router,
               private productService: ProductService,
               private cartService: CartService,
-              private categoryBrandService: CategoryBrandService) { }
+              private categoryBrandService: CategoryBrandService,
+              private customerService : CustomerService) { }
 
   ngOnInit(): void {
     const script1 = document.createElement('script');
     script1.src = './assets/js/vendor/modernizr-2.8.3.min.js';
     document.body.appendChild(script1);
-    // this.displayItem();
-    // this.displayBrandByCategory();
-    // this.findProductByCustomerId()
+    this.displayItem();
+    this.displayBrandByCategory();
+    this.findProductByCustomerId()
   }
   directAdmin(){
     this.router.navigate(['admin']);
@@ -100,114 +103,120 @@ export class HomeComponent implements OnInit {
     document.body.appendChild(script22);
   }
 
-  // // Hiển thị Brand và Category
-  // displayBrandByCategory() {
-  //   return this.categoryBrandService.findAllCategoryAndBrand().subscribe(value => {
-  //     this.categoryBrands = value
-  //     console.log(value)
-  //   })
-  // }
-  // //Products của người mua hàng gồm cả người bán hàng nhưng không có sản phẩm của người bán đó
-  // // Đấy là list Product hiển thị trên trang bán hàng
-  // findProductByCustomerId() {
-  //   // @ts-ignore
-  //   let idCustomer = parseInt(localStorage.getItem("idCustomer"))
-  //   this.productService.findAllProductNotCustomerId(idCustomer).subscribe(value => {
-  //     this.listProduct = value
-  //   })
-  // }
-  // findProductByCategoryId(idCategory?: number) {
-  //   // @ts-ignore
-  //   let idCustomer = parseInt(localStorage.getItem("idCustomer"))
-  //   return this.productService.findAllProductByCategoryId(idCategory, idCustomer).subscribe(value => {
-  //     this.listProduct = value;
-  //     console.log(value)
-  //   })
-  // }
-  //
-  // displayItem() {
-  //   // @ts-ignore
-  //   let idCustomer = parseInt(localStorage.getItem("idCustomer"))
-  //   this.cartService.findAllItemByCustomerId(idCustomer).subscribe(value => {
-  //     this.items = value;
-  //     for (let i = 0; i < value.length; i++) {
-  //       // @ts-ignore
-  //       this.total += value[i].quantity * value[i].product.price
-  //     }
-  //   })
-  // }
-  //
-  // findAllProductByCategoryIdAndBrandId(idCategory?: number, idBrand?: number) {
-  //   // @ts-ignore
-  //   let idCustomer = parseInt(localStorage.getItem("idCustomer"))
-  //   return this.productService.findAllProductByCategoryIdAndBrandId(idCustomer, idCategory, idBrand)
-  //     .subscribe(value => {
-  //       this.listProduct = value
-  //     })
-  // }
-  // deleteItem(idItem?: number) {
-  //   Swal.fire({
-  //     title: 'Xóa sản phẩm',
-  //     text: "Xóa sản phẩm khỏi giỏ hàng",
-  //     icon: 'warning',
-  //     showCancelButton: true,
-  //     confirmButtonColor: '#3085d6',
-  //     cancelButtonColor: '#d33',
-  //     confirmButtonText: 'Đồng ý!',
-  //     cancelButtonText: 'Hủy',
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       this.cartService.deleteItem(idItem).subscribe(value => {
-  //
-  //       }, error => {
-  //         Swal.fire({
-  //           position: 'center',
-  //           icon: 'error',
-  //           title: 'Xóa thất bại',
-  //           showConfirmButton: false,
-  //           timer: 1500
-  //         })
-  //       })
-  //       Swal.fire({
-  //         position: 'center',
-  //         icon: 'success',
-  //         title: 'Xóa sản phẩm thành công',
-  //         showConfirmButton: false,
-  //         timer: 1500
-  //       })
-  //     }
-  //     this.ngOnInit()
-  //     // @ts-ignore
-  //     document.getElementById('cart').style.display = "none"
-  //
-  //   })
-  //
-  // }
-  // findImageURLFirst(idProduct: any): any {
-  //   let imageURL: any;
-  //   let flag = false;
-  //   if (idProduct != null) {
-  //     for (let i = 0; i < this.listProduct.length; i++) {
-  //       // @ts-ignore
-  //       if (this.listProduct[i].product.id == idProduct) {
-  //         flag = true
-  //         // @ts-ignore
-  //         imageURL = this.listProduct[i].imageURLS[0]
-  //         return imageURL;
-  //       }
-  //     }
-  //   }
-  // }
-  //
-  // changePrice(money?: number): any {
-  //   const formatter = new Intl.NumberFormat('it-IT', {
-  //     style: 'currency',
-  //     currency: 'VND',
-  //   })
-  //   if (money != null) {
-  //     return formatter.format(money);
-  //   }
-  //
-  // }
+  // Hiển thị Brand và Category
+  displayBrandByCategory() {
+    // @ts-ignore
+    this.idCurrentCustomer = parseInt(localStorage.getItem("idCustomer"))
+    return this.categoryBrandService.findAllCategoryAndBrand().subscribe(value => {
+      this.categoryBrands = value
+      console.log(value)
+    })
+  }
+  //Products của người mua hàng gồm cả người bán hàng nhưng không có sản phẩm của người bán đó
+  // Đấy là list Product hiển thị trên trang bán hàng
+  findProductByCustomerId() {
+    // @ts-ignore
+    let idCustomer = parseInt(localStorage.getItem("idCustomer"))
+    this.productService.findAllProductNotCustomerId(idCustomer).subscribe(value => {
+      this.listProduct = value
+    })
+  }
+  findProductByCategoryId(idCategory?: number) {
+    // @ts-ignore
+    let idCustomer = parseInt(localStorage.getItem("idCustomer"))
+    return this.productService.findAllProductByCategoryId(idCategory, idCustomer).subscribe(value => {
+      this.listProduct = value;
+      console.log(value)
+    })
+  }
+
+  displayItem() {
+    // @ts-ignore
+    let idCustomer = parseInt(localStorage.getItem("idCustomer"))
+    this.cartService.findAllItemByCustomerId(idCustomer).subscribe(value => {
+      this.items = value;
+      for (let i = 0; i < value.length; i++) {
+        // @ts-ignore
+        this.total += value[i].quantity * value[i].product.price
+      }
+    })
+  }
+
+  findAllProductByCategoryIdAndBrandId(idCategory?: number, idBrand?: number) {
+    // @ts-ignore
+    let idCustomer = parseInt(localStorage.getItem("idCustomer"))
+    return this.productService.findAllProductByCategoryIdAndBrandId(idCustomer, idCategory, idBrand)
+      .subscribe(value => {
+        this.listProduct = value
+      })
+  }
+  deleteItem(idItem?: number) {
+    Swal.fire({
+      title: 'Xóa sản phẩm',
+      text: "Xóa sản phẩm khỏi giỏ hàng",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Đồng ý!',
+      cancelButtonText: 'Hủy',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.cartService.deleteItem(idItem).subscribe(value => {
+
+        }, error => {
+          Swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: 'Xóa thất bại',
+            showConfirmButton: false,
+            timer: 1500
+          })
+        })
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Xóa sản phẩm thành công',
+          showConfirmButton: false,
+          timer: 1500
+        })
+      }
+      this.ngOnInit()
+      // @ts-ignore
+      document.getElementById('cart').style.display = "none"
+
+    })
+
+  }
+  findImageURLFirst(idProduct: any): any {
+    let imageURL: any;
+    let flag = false;
+    if (idProduct != null) {
+      for (let i = 0; i < this.listProduct.length; i++) {
+        // @ts-ignore
+        if (this.listProduct[i].product.id == idProduct) {
+          flag = true
+          // @ts-ignore
+          imageURL = this.listProduct[i].imageURLS[0]
+          return imageURL;
+        }
+      }
+    }
+  }
+
+  changePrice(money?: number): any {
+    const formatter = new Intl.NumberFormat('it-IT', {
+      style: 'currency',
+      currency: 'VND',
+    })
+    if (money != null) {
+      return formatter.format(money);
+    }
+
+  }
+  logOut(){
+    this.customerService.logOutCustomer();
+    window.location.replace("http://localhost:4200/login-register")
+  }
 
 }

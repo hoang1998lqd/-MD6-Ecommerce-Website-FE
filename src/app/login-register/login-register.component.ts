@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import Swal from 'sweetalert2';
 import {Customer} from "../model/Customer";
 import {Role} from "../model/Role";
-import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {CustomerService} from "../service/customer.service";
 import {data, error} from "jquery";
 import {first} from "rxjs";
@@ -17,6 +17,7 @@ export class LoginRegisterComponent implements OnInit {
   role!: Role
   customerForm!: FormGroup
   loginForm!: FormGroup
+  idCurrentCustomer : number = 0
 
   constructor(private customerService: CustomerService,
               private formGroup: FormBuilder,
@@ -29,6 +30,8 @@ export class LoginRegisterComponent implements OnInit {
     const script1 = document.createElement('script');
     script1.src = './assets/js/vendor/modernizr-2.8.3.min.js';
     document.body.appendChild(script1);
+    // @ts-ignore
+    this.idCurrentCustomer = parseInt(localStorage.getItem("idCustomer"))
 
     this.customerForm = this.formGroup.group({
       id: [''],
@@ -161,14 +164,14 @@ export class LoginRegisterComponent implements OnInit {
       })
   }
   directCustomer(roles?: string){
-    if (roles == "admin"){
-     this.router.navigate(['admin'])
+    if (roles == "ADMIN"){
+     this.router.navigate(['ADMIN'])
     }
-    if (roles == "seller"){
-      this.router.navigate(['admin'])
+    if (roles == "ADMIN"){
+      this.router.navigate(['ADMIN'])
     }
-    if (roles == "customer"){
-      this.router.navigate(['admin'])
+    if (roles == "ADMIN"){
+      this.router.navigate(['ADMIN'])
     }
   }
 
@@ -236,6 +239,13 @@ export class LoginRegisterComponent implements OnInit {
     const script22 = document.createElement('script');
     script22.src = './assets/js/main.js';
     document.body.appendChild(script22);
+  }
+  logOut(){
+    this.customerService.logOutCustomer();
+    window.location.replace("http://localhost:4200/login-register")
+  }
+  directAdmin(){
+    this.router.navigate(['admin']);
   }
 
 }

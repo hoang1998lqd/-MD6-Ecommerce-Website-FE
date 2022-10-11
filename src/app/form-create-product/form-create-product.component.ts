@@ -43,7 +43,6 @@ export class FormCreateProductComponent implements OnInit, AfterContentChecked {
   ) { }
   ngOnInit(): void {
     console.log(this.editData)
-    localStorage.setItem("idCustomer", "1")
     // @ts-ignore
     this.customerCurrentId = parseInt(localStorage.getItem("idCustomer"))
     // @ts-ignore

@@ -1,7 +1,7 @@
-import {Product} from "./Product";
 import {ImageURL} from "./ImageURL";
+import {Product} from "./Product";
 
-export interface ProductDTO {
-  product?: Product
+export interface ProductDTO{
+  product?: Product,
   imageURLS?: ImageURL[]
 }

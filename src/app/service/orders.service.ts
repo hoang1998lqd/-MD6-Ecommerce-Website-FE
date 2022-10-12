@@ -23,4 +23,15 @@ export class OrdersService {
     return  this.httpclient.post<OrderDetail[]>("http://localhost:8081/api/orders/order-detail",orderDetails)
   }
 
+  findAllOrderByCustomerId(idCustomer: number): Observable<Orders[]>{
+    return this.httpclient.get<Orders[]>("http://localhost:8081/api/orders/order-customer/"+idCustomer)
+  }
+
+  findAllOrderDetailByOrderId(idOrder: number): any{
+    return this.httpclient.get<any>("http://localhost:8081/api/orders/order-detail-order/"+idOrder)
+  }
+
+  findAllOrderDetailByCustomerId(idCustomer: number):Observable<OrderDetail[]>{
+    return this.httpclient.get<OrderDetail[]>("http://localhost:8081/api/orders/order-detail-by-idCustomer/"+idCustomer)
+  }
 }

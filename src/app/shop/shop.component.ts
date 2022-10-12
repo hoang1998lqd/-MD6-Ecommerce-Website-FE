@@ -40,8 +40,7 @@ export class ShopComponent implements OnInit {
 
   constructor(private productService: ProductService,
               private cartService: CartService,
-              private categoryBrandService: CategoryBrandService,
-  ) {
+              private categoryBrandService: CategoryBrandService,) {
   }
 
 
@@ -370,7 +369,7 @@ export class ShopComponent implements OnInit {
   }
 
 
-  changeTableSize(size?:number){
+  changeTableSize(size?: number) {
     this.tableSize = size
   }
 
@@ -407,9 +406,10 @@ export class ShopComponent implements OnInit {
     })
   }
 
-  openMiniCart(){
+  openMiniCart() {
     // @ts-ignore
     document.getElementById('cart').style.display = "block"
   }
 
 }
+

@@ -36,7 +36,7 @@ import {MatSortModule} from "@angular/material/sort";
 import {MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions, MatCheckboxModule} from "@angular/material/checkbox";
 import {NgxPaginationModule} from "ngx-pagination";
 import {OrderComponent} from "./order/order.component";
-
+import {TestOrderComponent} from "./test-order/test-order.component";
 
 
 @NgModule({
@@ -54,6 +54,8 @@ import {OrderComponent} from "./order/order.component";
     SingleProductComponent,
     CheckoutComponent,
     OrderComponent,
+    TestOrderComponent,
+
   ],
     imports: [
         BrowserModule,

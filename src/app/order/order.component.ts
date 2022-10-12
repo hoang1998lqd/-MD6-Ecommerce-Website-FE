@@ -55,7 +55,6 @@ export class OrderComponent implements OnInit {
   }
 
   findProductByOrderDetail(){
-
   }
 }
 export interface PeriodicElement {

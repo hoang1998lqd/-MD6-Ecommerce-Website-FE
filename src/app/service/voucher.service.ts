@@ -21,10 +21,13 @@ export class VoucherService {
   }
 
   updateVoucher(voucher?: Voucher): Observable<Voucher> {
-    return this.httpClient.put<Voucher>("http://localhost:8081/api/voucher", voucher)
+    return this.httpClient.put<Voucher>("http://localhost:8081/api/voucher/update-voucher", voucher)
   }
 
   deleteVoucher(id?: number): Observable<Voucher> {
-    return this.httpClient.delete("http://localhost:8081/api/voucher/" + id)
+    return this.httpClient.delete("http://localhost:8081/api/voucher/delete-voucher" + id)
+  }
+  findAll(): Observable<Voucher[]>{
+    return this.httpClient.get<Voucher[]>("http://localhost:8081/api/voucher")
   }
 }

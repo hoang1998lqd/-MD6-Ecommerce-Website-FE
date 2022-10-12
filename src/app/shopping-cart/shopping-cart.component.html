@@ -384,7 +384,7 @@
                 <div class="coupon-all">
                   <div class="coupon">
                     <input id="coupon_code" class="input-text" name="coupon_code" value="" placeholder="Nhập mã" type="text">
-                    <input class="button" name="apply_coupon" value="Áp mã giảm giá" type="submit">
+                    <input class="button" name="apply_coupon" value="Áp mã giảm giá" type="submit"  (click)="getCheckVoucher()" >
                   </div>
                   <div class="coupon2">
                     <input class="button" name="update_cart" value="Cập nhật giỏ hàng" (click)="updateQuantityItem()">
@@ -399,7 +399,7 @@
                   <ul>
                     <li>Tổng tiền <span>{{changePrice(subtotal)}}</span></li>
                     <li>Giảm giá <span>{{discountItem}}%</span></li>
-                    <li>Mã giảm giá <span>0%</span></li>
+                    <li>Mã giảm giá <span>{{discountVoucher}}%</span></li>
                     <li>Thành tiền <span>{{changePrice(total)}}</span></li>
                   </ul>
                   <a style="margin-left: 340px" routerLink="/checkout">Tiến hành thanh toán</a>

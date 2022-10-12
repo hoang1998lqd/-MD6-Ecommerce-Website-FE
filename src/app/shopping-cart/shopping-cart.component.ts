@@ -4,6 +4,8 @@ import {CartService} from "../service/cart.service";
 import {Item} from "../model/Item";
 import Swal from "sweetalert2";
 import {ProductDTO} from "../model/ProductDTO";
+import {VoucherService} from "../service/voucher.service";
+import {Voucher} from "../model/Voucher";
 
 
 @Component({
@@ -15,12 +17,15 @@ export class ShoppingCartComponent implements OnInit {
   items: Item [] = []
   discountItem: number = 0;
   voucherItem: number = 0;
+  discountVoucher: number = 0;
   listProduct: ProductDTO [] = []
   subtotal: number = 0;
   total: number = 0;
+  vouchers: Voucher [] = []
 
   constructor(private productService: ProductService,
-              private cartService: CartService) {
+              private cartService: CartService,
+              private voucherService: VoucherService) {
   }
 
   ngOnInit(): void {
@@ -29,9 +34,12 @@ export class ShoppingCartComponent implements OnInit {
     document.body.appendChild(script1);
     this.displayItem()
     this.findProductByCustomerId()
+    this.getCheckVoucher()
+
+
   }
 
-  ngAfterContentChecked(){
+  ngAfterContentChecked() {
     const script2 = document.createElement('script');
     script2.src = './assets/js/vendor/jquery-1.12.4.min.js';
     document.body.appendChild(script2);
@@ -212,10 +220,10 @@ export class ShoppingCartComponent implements OnInit {
               this.cartService.updateItemToCart(item).subscribe(value1 => {
                 this.updateQuantityToCartSuccess()
                 // this.displayItem()
-                setTimeout(()=>{
+                setTimeout(() => {
                   window.location.reload()
                   // this.displayItem()
-                },1700)
+                }, 1700)
               })
             }
           })
@@ -266,18 +274,32 @@ export class ShoppingCartComponent implements OnInit {
     for (let i = 0; i < this.items.length; i++) {
       if (this.items[i].id == idItem) {
         // @ts-ignore
-        totalMoney = this.items[i].quantity * this.items[i].product.price
+        totalMoney = this.items[i].quantity * this.items[i].product.price * this.discountVoucher
         return totalMoney
       }
     }
   }
+
 // check mã giảm giá
+  getCheckVoucher() {
+// @ts-ignore
+    let mgg = document.getElementById("coupon_code").value
+    let check = null;
+    for (let i = 0; i < this.vouchers.length; i++) {
+      if (this.vouchers[i].name == mgg) {
+        // check = this.vouchers;
+        this.discountVoucher == this.vouchers[i].discount
+
+      }
+    }
+  }
 
 
   // Lấy tổng tiền cần thanh toán khi đặt hàng
   getTotalMoney(subtotal: any) {
     if (subtotal > 100000000) {
-      this.total = subtotal - subtotal * this.voucherItem / 100 - subtotal * 0.3
+      // @ts-ignore
+      this.total = subtotal - subtotal * this.voucherItem * this.getCheckVoucher() / 100 - subtotal * 0.3
       this.discountItem = 30
     } else if (subtotal > 50000000) {
       this.total = subtotal - subtotal * this.voucherItem / 100 - subtotal * 0.15

@@ -316,7 +316,6 @@ export class AdminTableComponent implements OnInit, AfterContentChecked, AfterVi
 
   deleteVoucher(id : any
   ) {
-    this.idt = id
     Swal.fire({
       title: 'Bạn có chắc chắn muốn xóa?',
       text: "Dữ liệu sẽ không thể khôi phục!",

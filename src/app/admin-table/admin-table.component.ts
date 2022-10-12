@@ -19,7 +19,7 @@ import {VoucherService} from "../service/voucher.service";
 @Component({
   selector: 'app-admin-table',
   templateUrl: './admin-table.component.html',
-  styleUrls: ['./admin-table.component.css']
+  styleUrls: ['./admin-table.component.css'],
 })
 export class AdminTableComponent implements OnInit, AfterContentChecked, AfterViewInit {
   listProduct!: MatTableDataSource<ProductDTO>
@@ -33,7 +33,7 @@ export class AdminTableComponent implements OnInit, AfterContentChecked, AfterVi
   categories: Category [] = []
   productForm!: FormGroup;
   displayedColumns: string[] = ['stt', 'name', 'price', 'amount', 'color', 'image', 'edit', 'delete'];
-  displayedColumns2: string[] = ['stt', 'name', 'discount', 'amount'];
+  idt?: number
 
   constructor(private productService: ProductService,
               private voucherService: VoucherService,
@@ -81,12 +81,11 @@ export class AdminTableComponent implements OnInit, AfterContentChecked, AfterVi
     this.displayProducts()
     this.displayBrands()
     this.displayCategories()
-    this.displayVoucher()
     this.voucherForm = this.formGroup.group({
       id: [''],
-      name: ['', Validators.required],
-      discount: ['', [Validators.required, Validators.min(0), Validators.max(100)]],
-      quantity: ['', [Validators.required, Validators.max(20)]],
+      name: [''],
+      discount: [''],
+      quantity: [''],
       customer: [''],
     })
 
@@ -158,18 +157,30 @@ export class AdminTableComponent implements OnInit, AfterContentChecked, AfterVi
 
     })
   }
+
   displayVoucher() {
-    // @ts-ignore
+// @ts-ignore
     let idCustomer = parseInt(localStorage.getItem("idCustomer"))
 
-    this.voucherService.findAllByStore_Id(idCustomer).subscribe(value => {
-      // @ts-ignore
-      this.listVoucher = new MatTableDataSource(value)
-      // @ts-ignore
-      this.listVoucher.paginator = this.paginator
-      this.listVoucher.connect()
+    // @ts-ignore
+    document.getElementById('displayVocher').style.display = "block"
+    this.voucherService.findAllByStore_Id(5).subscribe(value => {
+      this.vouchers = value
     })
 
+  }
+
+
+  setUpFormUpdate(voucher: Voucher) {
+    this.voucherForm.patchValue(voucher)
+    // @ts-ignore
+    document.getElementById("titleFrom").innerHTML = "Chỉnh sửa ";
+    // @ts-ignore
+    document.getElementById("buttonCreate")!.hidden = true
+    // @ts-ignore
+    document.getElementById("buttonUpdate")!.hidden = false
+    // @ts-ignore
+    document.getElementById("myModal").style.display = "block"
   }
 
   createVoucher() {
@@ -178,28 +189,68 @@ export class AdminTableComponent implements OnInit, AfterContentChecked, AfterVi
       name: this.voucherForm.value.name,
       discount: this.voucherForm.value.discount,
       quantity: this.voucherForm.value.quantity,
+      customer: {
+        id: 5,
+      }
     }
     this.voucherService.createVoucher(voucher).subscribe(value => {
-        this.createVoucher()
-        // @ts-ignore
-        document.getElementById("myModal").style.display = "none"
-        this.displayVoucher()
-        console.log(value)
-      }, error => {
-        Swal.fire({
-          position: 'center',
-          icon: 'error',
-          title: 'Tạo mới thất bại',
-          showConfirmButton: false,
-          timer: 1500
-        })
-      }
-    )
+      this.createSuccess()
+      // @ts-ignore
+      document.getElementById("myModal").style.display = "none"
+      this.displayVoucher()
+      console.log(value)
+    }, error => {
+      Swal.fire({
+        position: 'center',
+        icon: 'error',
+        title: 'Tạo mới thất bại',
+        showConfirmButton: false,
+        timer: 1500
+      })
+    })
     // @ts-ignore
     document.getElementById("rest").click()
   }
 
-
+  updateVoucher(id?: number) {
+    // @ts-ignore
+    let voucher = {
+      id: id,
+      name: this.voucherForm.value.name,
+      discount: this.voucherForm.value.discount,
+      quantity: this.voucherForm.value.quantity,
+      customer: {
+        id: 5
+      }
+    }
+    Swal.fire({
+      title: 'Bản có chắc chắn muốn chỉnh sửa?',
+      showDenyButton: true,
+      confirmButtonText: 'Chỉnh sửa',
+      denyButtonText: `Hủy`,
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        this.voucherService.updateVoucher(voucher).subscribe(value => {
+          this.setUpFormUpdate(value)
+          // @ts-ignore
+          document.getElementById("myModal").style.display = "none"
+          this.displayVoucher()
+        }, error => {
+          Swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: 'Chỉnh sửa thất bại',
+            showConfirmButton: false,
+            timer: 1500
+          })
+        })
+        Swal.fire('Chỉnh sửa thành công!', '', 'success')
+      } else if (result.isDenied) {
+        Swal.fire('Hủy bỏ!', '', 'info')
+      }
+    })
+  }
 
   displayBrands() {
     this.productService.findAllBrands().subscribe(value => {
@@ -226,34 +277,11 @@ export class AdminTableComponent implements OnInit, AfterContentChecked, AfterVi
     document.getElementById("createVoucher").style.display = "none"
   }
 
-  updateVoucher() {
-    // @ts-ignore
-    let id = parseInt(localStorage.getItem("idCustomer"))
-    let voucher = {
-      id: this.idVoucherUpdate,
-      name: this.voucherForm.value.name,
-      discount: this.voucherForm.value.discount,
-      quantity: this.voucherForm.value.quantity,
-      customer: {
-        id: id
-      }
-    }
-    this.voucherService.updateVoucher(voucher).subscribe(value => {
-      console.log(value)
-      this.voucherForm.reset()
-    }, error => {
-      Swal.fire({
-        position: 'center',
-        icon: 'error',
-        title: 'Cập nhật thất bại',
-        showConfirmButton: false,
-        timer: 1500
-      })
 
-    })
-  }
-
-  deleteProduct(id: number) {
+  deleteProduct(id
+                  :
+                  number
+  ) {
     // this.productService.deleteProduct(id)
     Swal.fire({
       title: 'Bạn có chắc chắn muốn xóa?',
@@ -284,15 +312,59 @@ export class AdminTableComponent implements OnInit, AfterContentChecked, AfterVi
         )
       }
     })
-
   }
 
+  deleteVoucher(id : any
+  ) {
+    this.idt = id
+    Swal.fire({
+      title: 'Bạn có chắc chắn muốn xóa?',
+      text: "Dữ liệu sẽ không thể khôi phục!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Đồng ý!',
+      cancelButtonText: 'Hủy',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.voucherService.deleteVoucher(id).subscribe(value => {
+          this.displayVoucher()
+        }, error => {
+          Swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: 'Xóa thất bại',
+            showConfirmButton: false,
+            timer: 1500
+          })
+        })
+        Swal.fire(
+          'Xóa thành công!',
+          'Dữ liệu đã bị xóa bỏ',
+          'success'
+        )
+      }
+    })
+  }
 
-  getProductUpdate(id: number) {
+  getProductUpdate(id
+                     :
+                     number
+  ) {
     this.productService.getProductById(id).subscribe(value => {
       this.dialog.open(FormCreateProductComponent, {width: '30%', data: value})
     })
   }
 
+  createSuccess() {
+    Swal.fire({
+      position: 'center',
+      icon: 'success',
+      title: 'Tạo mới thành công',
+      showConfirmButton: false,
+      timer: 1500
+    })
+  }
 
 }

@@ -80,26 +80,27 @@ export class FormCreateVoucherComponent implements OnInit, AfterContentChecked {
       discount: this.voucherForm.value.discount,
       quantity: this.voucherForm.value.quantity,
     }
-this.voucherService.createVoucher(voucher).subscribe(value => {
-this.createSuccess()
-  // @ts-ignore
-  document.getElementById("mymodal").style.display="none"
-  this.displayVoucher()
-  console.log(value)
-}, error =>{
-  Swal.fire({
-    position: 'center',
-    icon: 'error',
-    title: 'Tạo mới thất bại',
-    showConfirmButton: false,
-    timer: 1500
-  }
-)
-  })
+    this.voucherService.createVoucher(voucher).subscribe(value => {
+      this.createSuccess()
+      // @ts-ignore
+      document.getElementById("mymodal").style.display = "none"
+      this.displayVoucher()
+      console.log(value)
+    }, error => {
+      Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: 'Tạo mới thất bại',
+          showConfirmButton: false,
+          timer: 1500
+        }
+      )
+    })
     // @ts-ignore
-    document.getElementById("rest").click()}
+    document.getElementById("rest").click()
+  }
 
-    // saveVoucher() {
+  // saveVoucher() {
   //   if (!this.editData) {
   //     // @ts-ignore
   //     let id = parseInt(localStorage.getItem("idCustomer"))
@@ -150,33 +151,5 @@ this.createSuccess()
     })
   }
 
-  updateVoucher() {
-    // @ts-ignore
-    let id = parseInt(localStorage.getItem("idCustomer"))
-    let voucher = {
-      id: this.idVoucherUpdate,
-      name: this.voucherForm.value.name,
-      discount: this.voucherForm.value.discount,
-      quantity: this.voucherForm.value.quantity,
-      customer: {
-        id: id
-      }
-    }
-    this.voucherService.updateVoucher(voucher).subscribe(value => {
-      console.log(value)
-      this.voucherForm.reset()
-      this.dialogRef.close('Update')
-      this.updateSuccess()
-    }, error => {
-      Swal.fire({
-        position: 'center',
-        icon: 'error',
-        title: 'Cập nhật thất bại',
-        showConfirmButton: false,
-        timer: 1500
-      })
-
-    })
-  }
 
 }

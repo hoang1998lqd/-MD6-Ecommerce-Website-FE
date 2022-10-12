@@ -30,6 +30,7 @@
     "firebase": "^9.10.0",
     "font-awesome": "^4.7.0",
     "jquery": "^3.6.1",
+    "ngx-pagination": "^6.0.2",
     "rxjs": "~7.5.0",
     "sweetalert2": "^11.4.37",
     "tslib": "^2.3.0",

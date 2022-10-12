@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule, RoutingComponent } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {HttpClientModule} from "@angular/common/http";
@@ -21,14 +20,26 @@ import {MatInputModule} from "@angular/material/input";
 
 import { FormCreateProductComponent } from './form-create-product/form-create-product.component';
 import {MatSelectModule} from "@angular/material/select";
+// @ts-ignore
 import {AngularFireStorageModule} from "@angular/fire/compat/storage";
 import {environment} from "../environments/environment";
+// @ts-ignore
 import {AngularFireAuth, AngularFireAuthModule} from "@angular/fire/compat/auth";
+// import {AngularFireAuth} from "@angular/fi"
+// @ts-ignore
 import {AngularFireModule} from "@angular/fire/compat";
+
+import { SingleProductComponent } from './single-product/single-product.component';
+import { CheckoutComponent } from './checkout/checkout.component';
 import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatSortModule} from "@angular/material/sort";
+
 import { FormCreateVoucherComponent } from './form-create-voucher/form-create-voucher.component';
+
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {NgxPaginationModule} from "ngx-pagination";
+
 
 
 @NgModule({
@@ -43,30 +54,36 @@ import { FormCreateVoucherComponent } from './form-create-voucher/form-create-vo
     AdminComponent,
     AdminTableComponent,
     FormCreateProductComponent,
-    FormCreateVoucherComponent
+
+    FormCreateVoucherComponent,
+    SingleProductComponent,
+    CheckoutComponent
+
 
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    ReactiveFormsModule,
-    FormsModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatIconModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatTableModule,
-    MatSelectModule,
-    AngularFireStorageModule,
-    AngularFireAuthModule,
-    // Khởi tạo vào gọi tới Environment được khai báo biến ở trong environment
-    AngularFireModule.initializeApp(environment.firebaseConfig),
-    MatPaginatorModule,
-    MatSortModule,
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        ReactiveFormsModule,
+        FormsModule,
+        HttpClientModule,
+        BrowserAnimationsModule,
+        MatDialogModule,
+        MatButtonModule,
+        MatIconModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatTableModule,
+        MatSelectModule,
+        AngularFireStorageModule,
+        AngularFireAuthModule,
+        // Khởi tạo vào gọi tới Environment được khai báo biến ở trong environment
+        AngularFireModule.initializeApp(environment.firebaseConfig),
+        MatPaginatorModule,
+        MatSortModule,
+        MatCheckboxModule,
+        NgxPaginationModule,
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

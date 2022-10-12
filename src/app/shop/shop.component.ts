@@ -1,13 +1,14 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ProductDTO} from "../model/ProductDTO";
 import {ProductService} from "../service/product.service";
-import {MatTableDataSource} from "@angular/material/table";
 import {Brand} from "../model/Brand";
-import {Category} from "../model/Category";
-import {Product} from "../model/Product";
 import {CartService} from "../service/cart.service";
 import {Item} from "../model/Item";
 import Swal from "sweetalert2";
+import {CategoryBrandService} from "../service/category-brand.service";
+import {CategoryBrand} from "../model/CategoryBrand";
+import {MatPaginator, PageEvent} from "@angular/material/paginator";
+
 
 @Component({
   selector: 'app-shop',
@@ -15,22 +16,23 @@ import Swal from "sweetalert2";
   styleUrls: ['./shop.component.css']
 })
 export class ShopComponent implements OnInit {
+  // Phân trang
+  page: number = 1;
+  count: number = 0;
+  tableSize: number = 3;
+  tableSizes: any = [6, 9, 12];
+  // Phân trang
+
   products: ProductDTO [] = []
   brands: Brand [] = []
-  categories: Category [] = []
-  roles: any[] = []
-  brandsLaptop: Brand [] = []
-  brandsPhone: Brand [] = []
-  brandsTv: Brand [] = []
-  brandsCamera: Brand [] = []
-  brandsFridge: Brand [] = []
-  brandsTablet: Brand [] = []
+  total: number = 0;
   items: Item [] = []
+  categoryBrands: CategoryBrand[] = []
   listProduct: ProductDTO [] = []
-  // @ts-ignore
-  idCustomerCurrent!: number
+
   constructor(private productService: ProductService,
-              private cartService: CartService
+              private cartService: CartService,
+              private categoryBrandService: CategoryBrandService,
   ) {
   }
 
@@ -38,20 +40,12 @@ export class ShopComponent implements OnInit {
     const script1 = document.createElement('script');
     script1.src = './assets/js/vendor/modernizr-2.8.3.min.js';
     document.body.appendChild(script1);
-    this.displayProducts()
-    this.displayBrands();
-    this.displayCategories()
-    this.findBrandByFridge()
-    this.findBrandByCamera()
-    this.findBrandByTv()
-    this.findBrandByLaptop()
-    this.findBrandByPhone()
-    this.findBrandByTablet()
     this.displayItem()
     this.findProductByCustomerId()
+    this.displayBrandByCategory()
   }
 
-  ngAfterContentInit() {
+  ngAfterContentChecked(){
     const script2 = document.createElement('script');
     script2.src = './assets/js/vendor/jquery-1.12.4.min.js';
     document.body.appendChild(script2);
@@ -117,18 +111,17 @@ export class ShopComponent implements OnInit {
     document.body.appendChild(script22);
   }
 
-  // Product của người bán hàng
-  displayProducts() {
-    // @ts-ignore
-    let idCustomer = parseInt(localStorage.getItem("idCustomer"))
-    this.productService.findAllProductByCustomerId(idCustomer).subscribe(value => {
-      this.products= value
+  // Hiển thị Brand và Category
+  displayBrandByCategory() {
+    return this.categoryBrandService.findAllCategoryAndBrand().subscribe(value => {
+      this.categoryBrands = value
+      console.log(value)
     })
   }
 
   //Products của người mua hàng gồm cả người bán hàng nhưng không có sản phẩm của người bán đó
   // Đấy là list Product hiển thị trên trang bán hàng
-  findProductByCustomerId(){
+  findProductByCustomerId() {
     // @ts-ignore
     let idCustomer = parseInt(localStorage.getItem("idCustomer"))
     this.productService.findAllProductNotCustomerId(idCustomer).subscribe(value => {
@@ -136,12 +129,15 @@ export class ShopComponent implements OnInit {
     })
   }
 
-
-  displayItem(){
+  displayItem() {
     // @ts-ignore
     let idCustomer = parseInt(localStorage.getItem("idCustomer"))
     this.cartService.findAllItemByCustomerId(idCustomer).subscribe(value => {
       this.items = value;
+      for (let i = 0; i < value.length; i++) {
+        // @ts-ignore
+        this.total += value[i].quantity * value[i].product.price
+      }
     })
   }
 
@@ -162,13 +158,13 @@ export class ShopComponent implements OnInit {
             // @ts-ignore
             quantity = this.items[i].product.amount
           }
-          let item= {
-            id : this.items[i].id,
-            quantity : quantity,
-            cart:{
+          let item = {
+            id: this.items[i].id,
+            quantity: quantity,
+            cart: {
               id: idCustomer
             },
-            product:{
+            product: {
               id: idProduct
             }
           }
@@ -176,19 +172,19 @@ export class ShopComponent implements OnInit {
             console.log(value1)
             this.addItemToCartSuccess()
             setTimeout(() => {
-              this.ngOnInit()
-            } ,2000)
+              this.displayItem()
+            }, 2000)
           })
         }
       }
-      if (!flag){
+      if (!flag) {
         let quantity = 1;
         let item = {
-          quantity : quantity,
-          cart:{
+          quantity: quantity,
+          cart: {
             id: idCustomer
           },
-          product:{
+          product: {
             id: idProduct
           }
         }
@@ -196,15 +192,15 @@ export class ShopComponent implements OnInit {
           console.log(value1);
           this.addItemToCartSuccess()
           setTimeout(() => {
-            this.ngOnInit()
-          } ,2000)
+            this.displayItem()
+          }, 2000)
         })
       }
     })
 
   }
 
-  deleteItem(idItem?: number){
+  deleteItem(idItem?: number) {
     Swal.fire({
       title: 'Xóa sản phẩm',
       text: "Xóa sản phẩm khỏi giỏ hàng",
@@ -243,60 +239,13 @@ export class ShopComponent implements OnInit {
 
   }
 
-  displayBrands() {
-    this.productService.findAllBrands().subscribe(value => {
-      this.brands = value;
-    })
-  }
-
-  displayCategories() {
-    this.productService.findAllCategories().subscribe(value => {
-      this.categories = value;
-    })
-  }
-
-  findBrandByLaptop() {
-    this.productService.findBrandByCategory(1).subscribe(value => {
-      this.brandsLaptop = value
-    })
-  }
-
-  findBrandByPhone() {
-    this.productService.findBrandByCategory(1).subscribe(value => {
-      this.brandsPhone = value
-    })
-  }
-
-  findBrandByTv() {
-    this.productService.findBrandByCategory(1).subscribe(value => {
-      this.brandsTv = value
-    })
-  }
-
-  findBrandByCamera() {
-    this.productService.findBrandByCategory(1).subscribe(value => {
-      this.brandsCamera = value
-    })
-  }
-
-  findBrandByFridge() {
-    this.productService.findBrandByCategory(1).subscribe(value => {
-      this.brandsFridge = value
-    })
-  }
-
-  findBrandByTablet() {
-    this.productService.findBrandByCategory(1).subscribe(value => {
-      this.brandsTablet = value
-    })
-  }
   findImageURLFirst(idProduct: any): any {
     let imageURL: any;
     let flag = false;
-    if (idProduct != null){
+    if (idProduct != null) {
       for (let i = 0; i < this.listProduct.length; i++) {
         // @ts-ignore
-        if (this.listProduct[i].product.id == idProduct){
+        if (this.listProduct[i].product.id == idProduct) {
           flag = true
           // @ts-ignore
           imageURL = this.listProduct[i].imageURLS[0]
@@ -306,26 +255,67 @@ export class ShopComponent implements OnInit {
     }
   }
 
-
   addItemToCartSuccess() {
-    Swal.fire({
+    const Toast = Swal.mixin({
+      toast: true,
       position: 'center',
-      icon: 'success',
-      title: 'Thêm vào giỏ hàng thành công',
       showConfirmButton: false,
-      timer: 1500
+      timer: 1500,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer)
+        toast.addEventListener('mouseleave', Swal.resumeTimer)
+      }
+    })
+    Toast.fire({
+      icon: 'success',
+      title: 'Thêm vào giỏ hàng thành công'
     })
   }
 
-  changePrice(money?: number) : any {
+  changePrice(money?: number): any {
     const formatter = new Intl.NumberFormat('it-IT', {
       style: 'currency',
       currency: 'VND',
     })
-    if (money != null){
+    if (money != null) {
       return formatter.format(money);
     }
 
   }
 
+  findProductByCategoryId(idCategory?: number) {
+    // @ts-ignore
+    let idCustomer = parseInt(localStorage.getItem("idCustomer"))
+    return this.productService.findAllProductByCategoryId(idCategory, idCustomer).subscribe(value => {
+      this.listProduct = value;
+      console.log(value)
+    })
+  }
+
+  findAllProductByCategoryIdAndBrandId(idCategory?: number, idBrand?: number) {
+    // @ts-ignore
+    let idCustomer = parseInt(localStorage.getItem("idCustomer"))
+    return this.productService.findAllProductByCategoryIdAndBrandId(idCustomer, idCategory, idBrand)
+      .subscribe(value => {
+      this.listProduct = value
+    })
+  }
+
+  //Phân trang sản phẩm
+  onTableDataChange(event: any) {
+    this.page = event;
+    this.findProductByCustomerId();
+  }
+  onTableSizeChange(event: any): void {
+    this.tableSize = event.target.value;
+    this.page = 1;
+    this.findProductByCustomerId();
+  }
+  //Phân trang sản phẩm
+
+  //Load lại trang
+  loadPage(){
+    window.location.reload()
+  }
 }

@@ -59,5 +59,12 @@ export class ProductService {
     return this.httpClient.get<ProductDTO[]>("http://localhost:8081/api/products/not-customer/" + idCustomer)
   }
 
+  findAllProductByCategoryId(idCategory?:number, idCustomer?: number):Observable<ProductDTO[]>{
+    return this.httpClient.get<ProductDTO[]>("http://localhost:8081/api/products/find-by-id/"+idCategory+"&"+idCustomer)
+  }
+  findAllProductByCategoryIdAndBrandId( idCustomer?: number,idCategory?:number,idBrand?:number):Observable<ProductDTO[]>{
+    return this.httpClient.get<ProductDTO[]>("http://localhost:8081/api/products/brand/"+idCustomer+"&"+idCategory+"&"+idBrand)
+  }
+
 
 }

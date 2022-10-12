@@ -4,7 +4,17 @@ import {CartService} from "../service/cart.service";
 import {Item} from "../model/Item";
 import Swal from "sweetalert2";
 import {ProductDTO} from "../model/ProductDTO";
+import {ThemePalette} from "@angular/material/core";
+import {CustomerService} from "../service/customer.service";
+import {Customer} from "../model/Customer";
+import {DTOItem} from "../model/DTOItem";
 
+export interface Task {
+  name: string;
+  completed: boolean;
+  color: ThemePalette;
+  subtasks?: Task[];
+}
 
 @Component({
   selector: 'app-shopping-cart',
@@ -15,12 +25,22 @@ export class ShoppingCartComponent implements OnInit {
   items: Item [] = []
   discountItem: number = 0;
   voucherItem: number = 0;
+  // Những tài khoản có quyền bán hàng
+  listCustomerHaveShop: Customer [] = []
   listProduct: ProductDTO [] = []
   subtotal: number = 0;
   total: number = 0;
+  DTOItems: DTOItem [] = []
+  // @ts-ignore
+  idCustomerCurrent: number
+  // List Shop in Cart
+  listShopCurrent: Customer [] = []
+  subtasks = {name: 'Warn', completed: false, color: 'warn'}
 
   constructor(private productService: ProductService,
-              private cartService: CartService) {
+              private cartService: CartService,
+              private customerService: CustomerService,
+  ) {
   }
 
   ngOnInit(): void {
@@ -29,9 +49,13 @@ export class ShoppingCartComponent implements OnInit {
     document.body.appendChild(script1);
     this.displayItem()
     this.findProductByCustomerId()
+    this.findAllCustomerHaveShop()
+    this.findShopInCart()
+    this.findAllDTOItem()
+
   }
 
-  ngAfterContentChecked(){
+  ngAfterContentChecked() {
     const script2 = document.createElement('script');
     script2.src = './assets/js/vendor/jquery-1.12.4.min.js';
     document.body.appendChild(script2);
@@ -95,6 +119,7 @@ export class ShoppingCartComponent implements OnInit {
     const script22 = document.createElement('script');
     script22.src = '/assets/js/main.js';
     document.body.appendChild(script22);
+
   }
 
   // Hiển thị danh sách sản phẩm được thêm vào giỏ hàng nhưng chưa được hình thành đơn hàng
@@ -212,10 +237,10 @@ export class ShoppingCartComponent implements OnInit {
               this.cartService.updateItemToCart(item).subscribe(value1 => {
                 this.updateQuantityToCartSuccess()
                 // this.displayItem()
-                setTimeout(()=>{
+                setTimeout(() => {
                   window.location.reload()
                   // this.displayItem()
-                },1700)
+                }, 1700)
               })
             }
           })
@@ -235,6 +260,7 @@ export class ShoppingCartComponent implements OnInit {
       didOpen: (toast) => {
         toast.addEventListener('mouseenter', Swal.stopTimer)
         toast.addEventListener('mouseleave', Swal.resumeTimer)
+
       }
     })
     Toast.fire({
@@ -307,4 +333,140 @@ export class ShoppingCartComponent implements OnInit {
       }
     }
   }
+
+  // CheckBox
+
+  task: Task = {
+    name: 'Chọn tất cả',
+    completed: false,
+    color: 'primary'
+  };
+
+  allComplete: boolean = false;
+
+  updateAllComplete() {
+    this.allComplete = this.subtasks != null && this.subtasks.completed;
+  }
+
+  someComplete(): boolean {
+    if (this.task.subtasks == null) {
+      return false;
+    }
+    return this.subtasks.completed && !this.allComplete;
+
+  }
+
+  setAll(completed: boolean) {
+    this.allComplete = completed;
+    if (this.subtasks == null) {
+      return;
+    }
+    this.subtasks.completed = completed;
+  }
+
+
+  // Hiển thị danh sách Item theo ID của Shop
+
+  // Tìm kiếm người dùng có quyền bán hàng
+  findAllCustomerHaveShop() {
+    return this.customerService.findAllCustomerHaveShop().subscribe(value => {
+      this.listCustomerHaveShop = value;
+    })
+  }
+
+  // Tìm ra list người bán hàng có sản phẩm tồn tại trong Cart của người đang đăng nhập
+  findShopInCart() {
+    // @ts-ignore
+    this.idCustomerCurrent = parseInt(localStorage.getItem("idCustomer"))
+    // let shopCurrent: Customer[] = []
+    return this.cartService.findListIdShop(this.idCustomerCurrent).subscribe(value => {
+      console.log(value)
+      for (let i = 0; i < value.length; i++) {
+        for (let j = 0; j < this.listCustomerHaveShop.length; j++) {
+          if (value[i] == this.listCustomerHaveShop[j].id) {
+            this.listShopCurrent.push(this.listCustomerHaveShop[j])
+          }
+        }
+      }
+    })
+  }
+
+  //Find All DTOItem.ts theo id của người đang đăng nhập
+  findAllDTOItem() {
+    return this.cartService.findAllDTOItem(this.idCustomerCurrent).subscribe(value => {
+      console.log(value)
+      this.DTOItems = value
+    })
+  }
+
+  // Tìm từng Item theo ID của từng cửa hàng có tồn tại trong Cart
+  findItemByShopId(idShop ?: number): any {
+    let DTOItems: DTOItem[] = [];
+    for (let i = 0; i < this.DTOItems.length; i++) {
+      if (this.DTOItems[i].shop_id == idShop) {
+        DTOItems.push(this.DTOItems[i])
+      }
+    }
+    return DTOItems;
+  }
+
+  subtotalMoney(idShop ?: number): any {
+    let DTOItems: DTOItem[] = [];
+    let subtotal = 0;
+    for (let i = 0; i < this.DTOItems.length; i++) {
+      if (this.DTOItems[i].shop_id == idShop) {
+        DTOItems.push(this.DTOItems[i])
+      }
+    }
+    for (let i = 0; i < DTOItems.length; i++) {
+      // @ts-ignore
+      subtotal += DTOItems[i].item.product.price * DTOItems[i].item.quantity
+    }
+    return subtotal
+
+  }
+
+  totalMoney(idShop ?: number): any {
+    let total = 0
+    let DTOItems: DTOItem[] = [];
+    let subtotal = 0;
+    for (let i = 0; i < this.DTOItems.length; i++) {
+      if (this.DTOItems[i].shop_id == idShop) {
+        DTOItems.push(this.DTOItems[i])
+      }
+    }
+    for (let i = 0; i < DTOItems.length; i++) {
+      // @ts-ignore
+      subtotal += DTOItems[i].item.product.price * DTOItems[i].item.quantity
+    }
+    if (subtotal > 100000000) {
+      total = subtotal - subtotal * this.voucherItem / 100 - subtotal * 0.3
+      this.discountItem = 30
+    } else if (subtotal > 50000000) {
+      total = subtotal - subtotal * this.voucherItem / 100 - subtotal * 0.15
+      this.discountItem = 15
+    } else if (subtotal > 30000000) {
+      total = subtotal - subtotal * this.voucherItem / 100 - subtotal * 0.1
+      this.discountItem = 10
+    } else {
+      total = subtotal - subtotal * this.voucherItem / 100
+      this.discountItem = 0
+    }
+    return total;
+  }
+
+  discountAutomatic(subtotal: number): any {
+    let discountItem = 0
+    if (subtotal > 100000000) {
+      discountItem = 30
+    } else if (subtotal > 50000000) {
+      discountItem = 15
+    } else if (subtotal > 30000000) {
+      discountItem = 10
+    } else {
+      discountItem = 0
+    }
+    return discountItem
+  }
+
 }

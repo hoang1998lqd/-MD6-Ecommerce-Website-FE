@@ -22,8 +22,8 @@ export class ShopComponent implements OnInit {
   // Phân trang
   page: number = 1;
   count: number = 0;
-  tableSize: number = 3;
-  tableSizes: any = [6, 9, 12];
+  tableSize: number | undefined = 3;
+  tableSizes: any = [3, 6, 9, 12];
   // Phân trang
 
   products: ProductDTO [] = []
@@ -261,7 +261,6 @@ export class ShopComponent implements OnInit {
     if (money != null) {
       return formatter.format(money);
     }
-
   }
 
   findProductByCategoryId(idCategory?: number) {
@@ -294,6 +293,9 @@ export class ShopComponent implements OnInit {
     this.findProductByCustomerId();
   }
 
+  changeTableSize(size?:number){
+    this.tableSize = size
+  }
   //Phân trang sản phẩm
 
   //Load lại trang
@@ -365,5 +367,10 @@ export class ShopComponent implements OnInit {
     const script22 = document.createElement('script');
     script22.src = './assets/js/main.js';
     document.body.appendChild(script22);
+  }
+
+  openMiniCart(){
+    // @ts-ignore
+    document.getElementById('cart').style.display = "block"
   }
 }

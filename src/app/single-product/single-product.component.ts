@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import {ActivatedRoute} from "@angular/router";
+import {ProductService} from "../service/product.service";
+import {ProductDTO} from "../model/ProductDTO";
 
 @Component({
   selector: 'app-single-product',
@@ -6,13 +9,35 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./single-product.component.css']
 })
 export class SingleProductComponent implements OnInit {
-
-  constructor() { }
+  idProduct?: number
+  idCustomer?: number
+  DTOProduct!: ProductDTO
+  constructor(private router: ActivatedRoute,
+              private productService: ProductService) { }
 
   ngOnInit(): void {
     const script1 = document.createElement('script');
     script1.src = './assets/js/vendor/modernizr-2.8.3.min.js';
     document.body.appendChild(script1);
+    // @ts-ignore
+    this.idProduct = this.router.snapshot.queryParamMap.get("id")
+    // @ts-ignore
+    this.idCustomer = localStorage.getItem("idCustomer")
+    this.productService.detailProduct(this.idCustomer, this.idProduct).subscribe(value => {
+      this.DTOProduct = value
+      console.log(this.DTOProduct)
+    })
+  }
+
+
+  changePrice(money?: number): any {
+    const formatter = new Intl.NumberFormat('it-IT', {
+      style: 'currency',
+      currency: 'VND',
+    })
+    if (money != null) {
+      return formatter.format(money);
+    }
   }
 
   ngAfterContentChecked(){
